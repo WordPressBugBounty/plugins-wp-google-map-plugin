@@ -5,7 +5,7 @@ Tags: google map,google maps,map,maps,map block
 Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 3.4
-Tested up to: 6.5.3
+Tested up to: 6.6.2
 Stable tag: 4.6.6
 Requires PHP: 5.3
 License: GPLv2 or later
