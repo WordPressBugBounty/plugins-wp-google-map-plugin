@@ -151,19 +151,23 @@ if ( $map->map_all_control['infowindow_openoption'] == 'mouseclick' ) {
 	$map->map_all_control['infowindow_openoption'] = 'click';
 }
 
-$infowindow_setting = isset($map->map_all_control['infowindow_setting'])? $map->map_all_control['infowindow_setting']:array();
+$infowindow_setting = isset($map->map_all_control['infowindow_setting'])? $map->map_all_control['infowindow_setting'] : '';
 
 if( isset( $map->map_all_control['location_infowindow_skin']['name'] ) && $map->map_all_control['location_infowindow_skin']['name'] == 'basic'){
 	$map->map_all_control['location_infowindow_skin']['name'] = 'default';
 }
 
-$infowindow_setting = htmlspecialchars_decode($infowindow_setting);
+if( !is_array( $infowindow_setting ) ){
+	$infowindow_setting = htmlspecialchars_decode($infowindow_setting);
+}
 
 $infowindow_sourcecode = apply_filters( 'wpgmp_infowindow_message',do_shortcode($infowindow_setting) , $map );
 
-$wpgmp_categorydisplayformat = isset($map->map_all_control['wpgmp_categorydisplayformat'])? $map->map_all_control['wpgmp_categorydisplayformat']:array();
+$wpgmp_categorydisplayformat = isset($map->map_all_control['wpgmp_categorydisplayformat'])? $map->map_all_control['wpgmp_categorydisplayformat']: '';
 
-$wpgmp_categorydisplayformat = !empty($wpgmp_categorydisplayformat)? htmlspecialchars_decode($wpgmp_categorydisplayformat) : '';
+if( !is_array( $wpgmp_categorydisplayformat ) && !empty($wpgmp_categorydisplayformat) ){
+	$wpgmp_categorydisplayformat = htmlspecialchars_decode($wpgmp_categorydisplayformat);
+}
 
 $listing_placeholder_content = apply_filters( 'wpgmp_listing_html', $wpgmp_categorydisplayformat, $map );
 

@@ -7,7 +7,7 @@ Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 3.4
 Tested up to: 6.8.1
-Stable tag: 4.8.1
+Stable tag: 4.8.2
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -231,6 +231,10 @@ Contact us at [Support](https://weplugins.com/support/).
 
 
 == Changelog ==
+
+= 4.8.2 =
+* Add : Fixed the Fatel error htmlspecialchars_decode().
+* Add : Fixed the search control error.
 
 = 4.8.1 =
 * Add : Fixed the png marker default size issue.
