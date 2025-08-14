@@ -1444,7 +1444,12 @@ $auto_fix = $wpgmp_settings['wpgmp_auto_fix'];
 $map_data['provider'] = $mapsprovider;
 $map_data['map_options']['tiles_provider'] = WPGMP_Helper::wpgmp_get_leaflet_provider();
 
-$map_data['apiKey'] = $wpgmp_settings['wpgmp_api_key'];
+if( isset( $wpgmp_settings['wpgmp_api_key'] ) ){
+	$map_data['apiKey'] = $wpgmp_settings['wpgmp_api_key'];
+}else{
+	$map_data['apiKey'] = '';
+}
+
 
 $map_data = apply_filters( 'wpgmp_final_map_data', $map_data, $map );
 
