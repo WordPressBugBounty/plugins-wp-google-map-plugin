@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 /**
  * Import Location(s) Tool.
  *
@@ -38,15 +42,7 @@ if ( $step == 'step-1' ) {
 
 	$download_link = wp_nonce_url(admin_url('admin.php?page=wpgmp_import_location&do_action=sample_csv_download'), 'sample_csv_download_action', 'sample_csv_download_nonce');
 
-	$form->add_element(
-		'html', 'download_sample_file', array(
-			'label' => esc_html__( 'Download Sample CSV', 'wp-google-map-plugin' ),
-			'id' => 'download_sample_file',
-			'html' => '<a href="'.$download_link.'">'.__('Download Sample CSV','wp-google-map-plugin').'</a>',
-			'desc'  => esc_html__( 'Click here to download the sample csv file, keep the file structure same, re-populate it with your data and upload it using above file upload control.', 'wp-google-map-plugin' ),
-		)
-	);
-
+	
 	$form->add_element(
 		'submit', 'import_loc', array(
 			'value'     => esc_html__( 'Continue', 'wp-google-map-plugin' ),
@@ -78,4 +74,5 @@ if ( $step == 'step-1' ) {
 	$form->render();
 
 }
+/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */
 

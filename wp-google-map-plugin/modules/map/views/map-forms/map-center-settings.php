@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 /**
  * Map's Center Location setting(s).
  *
@@ -198,3 +202,4 @@ $form->add_element(
 		'id'            => 'marker_center_icon',
 	)
 );
+/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */

@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 /**
  * Template for Add & Edit Category
  *
@@ -134,3 +138,4 @@ if ( isset( $_GET['doaction'] ) and 'edit' == $_GET['doaction'] ) {
 }
 
 $form->render();
+/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */

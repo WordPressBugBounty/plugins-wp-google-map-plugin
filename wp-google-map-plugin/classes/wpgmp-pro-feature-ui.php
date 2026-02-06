@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 if ( ! class_exists( 'WPGMP_Pro_Feature_UI_Modifier' ) ) {
 
 	class WPGMP_Pro_Feature_UI_Modifier {

@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.WP.AlternativeFunctions */
 /**
  *  Export-Import Records in csv,xml,json and excel
  *
@@ -50,6 +54,10 @@ if ( ! class_exists( 'FlipperCode_Export_Import' ) ) {
 		 */
 		function export( $action, $asFilename ) {
 
+			/* phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Plain-text download; fputcsv() handles quoting. */
+			/* phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_fopen -- Direct output to browser is intended. */
+			/* phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_fwrite -- Direct output to browser is intended. */
+			
 			if ( 'csv' == $action ) {
 
 				header( 'Content-Type: text/csv' );
@@ -64,18 +72,20 @@ if ( ! class_exists( 'FlipperCode_Export_Import' ) ) {
 						fputcsv( $fp, array_values( $result ), ',', '"' );
 					}
 				}
-
-				fclose( $fp );
+				
+				fclose( $fp );/* phpcs:disable WordPress.WP.AlternativeFunctions.file_system_read_fclose -- Direct output to browser is intended. */
 
 			} elseif ( 'excel' == $action ) {
 				header( 'Content-Type: application/xls' );
 				header( 'Content-Disposition: attachment; filename="' . $asFilename . '.xls"' );
 				if ( ! empty( $this->data ) ) {
 					$separator = "\t";
+					
 					echo implode( $separator, $this->columns ) . "\n";
 					foreach ( $this->data as $key => $result ) {
 						echo implode( $separator, $result ) . "\n";
 					}
+					
 				}
 			} elseif ( 'json' == $action ) {
 
@@ -93,6 +103,7 @@ if ( ! class_exists( 'FlipperCode_Export_Import' ) ) {
 				fwrite( $fp, $json_pretty_data );
 				fclose( $fp );
 			}
+			/* phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped */
 		}
 		/**
 		 * Convert xml node to array.
@@ -178,3 +189,6 @@ if ( ! class_exists( 'FlipperCode_Export_Import' ) ) {
 		}
 	}
 }
+// phpcs:enable WordPress.WP.AlternativeFunctions.file_system_read_fopen
+// phpcs:enable WordPress.WP.AlternativeFunctions.file_system_read_fwrite  
+// phpcs:enable WordPress.WP.AlternativeFunctions.file_system_read_fclose

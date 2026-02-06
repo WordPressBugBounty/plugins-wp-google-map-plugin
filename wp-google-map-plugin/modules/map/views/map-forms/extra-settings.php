@@ -1,5 +1,8 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 $form->add_element(
     'group', 'map_control_layers', array(
         'value'  => esc_html__( 'Map Layers Settings', 'wp-google-map-plugin' ),
@@ -86,3 +89,4 @@ $form->add_element(
 		'class' => 'form-control',
 	)
 );
+/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */

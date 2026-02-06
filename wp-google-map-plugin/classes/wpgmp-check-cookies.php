@@ -1,7 +1,10 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 add_filter('wpgmp_accept_cookies','wpgmp_accept_cookies_consent');
 
-function check_cookieyes_consent() {
+function wpgmp_check_cookieyes_consent() {
     if (isset($_COOKIE['cookieyes-consent'])) {
         $cookie_value = $_COOKIE['cookieyes-consent'];
         $cookie_data = urldecode($cookie_value);
@@ -25,7 +28,7 @@ function wpgmp_accept_cookies_consent($is_allowed) {
 		$is_allowed = true;
 	} elseif (function_exists('gdpr_cookie_is_accepted') && gdpr_cookie_is_accepted('thirdparty')) {
 		$is_allowed = true;
-	} elseif (function_exists('cky_get_consent_db_version') && check_cookieyes_consent()) {
+	} elseif (function_exists('cky_get_consent_db_version') && wpgmp_check_cookieyes_consent()) {
 		$is_allowed = true;
 	} elseif (class_exists('iubendaParser') && iubendaParser::consent_given()) {
 		$is_allowed = true;
@@ -46,7 +49,7 @@ function wpgmp_check_cookies_accepted(){
 		$accepted = false;
 	} elseif (function_exists('gdpr_cookie_is_accepted') && !gdpr_cookie_is_accepted('thirdparty')) {
 		$accepted = false;
-	} elseif (function_exists('cky_get_consent_db_version') && !check_cookieyes_consent()) {
+	} elseif (function_exists('cky_get_consent_db_version') && !wpgmp_check_cookieyes_consent()) {
 		$accepted = false;
 	} elseif (class_exists('iubendaParser') && !iubendaParser::consent_given()) {
 		$accepted = false;

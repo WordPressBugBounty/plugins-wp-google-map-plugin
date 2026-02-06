@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 /**
  * This class used to manage settings page in backend.
  *
@@ -112,3 +116,4 @@ $form->add_element(
 
 $form->add_element(	'hidden', 'wpgmp_version', array( 'value' => WPGMP_VERSION )	);
 $form->render();
+/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */

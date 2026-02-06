@@ -1,10 +1,13 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * Controller class
  *
  * @author Flipper Code<hello@flippercode.com>
  * @version 3.0.0
- * @package Posts
+ * @package WP Maps
  */
 
 if ( ! class_exists( 'WPGMP_Controller' ) ) {

@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * Class: WPGMP_Model_Group_Map
  * Handles Marker Category (Group Map) CRUD operations.

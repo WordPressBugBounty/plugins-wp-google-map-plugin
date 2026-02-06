@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 /**
  * Location listings for maps.
  *
@@ -89,3 +93,4 @@ $form->add_element(
 		'current' => $data['map_locations'],
 	)
 );
+/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */

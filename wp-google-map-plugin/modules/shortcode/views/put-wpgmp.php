@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 /**
  * Parse Shortcode and display maps.
  *
@@ -123,8 +127,8 @@ if ( isset( $options['show_all_locations'] ) and $options['show_all_locations'] 
 
 if ( isset( $options['limit'] ) and $options['limit'] > 0 ) {
 	$location_criteria['limit'] = $options['limit'];
-} elseif ( isset( $_GET['limit'] ) and $map->map_all_control['url_filter'] == 'true' ) {
-	$location_criteria['limit'] = sanitize_text_field( $_GET['limit'] );
+} elseif ( isset( $_GET['limit'] ) && $map->map_all_control['url_filter'] == 'true' ) {// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$location_criteria['limit'] = sanitize_text_field( $_GET['limit'] );// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 }
 
 if ( isset( $location_criteria['show_all_locations'] ) and $location_criteria['show_all_locations'] == true ) {
@@ -720,7 +724,7 @@ if ( is_array( $all_custom_markers ) ) {
 		}
 
 
-		$places['id']                         = isset( $marker['id'] ) ? $marker['id'] : rand( 4000, 9999 );
+		$places['id']                         = isset( $marker['id'] ) ? $marker['id'] : wp_rand( 4000, 9999 );
 		$places['title']                      = $marker['title'];
 		$places['source']                     = 'external';
 		$places['address']                    = $marker['address'];
@@ -777,6 +781,27 @@ if ( is_array( $map_data['places'] ) ) {
 
 	foreach ( $map_data['places'] as $place ) {
 		$use_me = true;
+
+		if ( isset( $shortcode_filters['category'] ) ) {
+
+            $found_category       = false;
+            $show_categories_only = explode( ',', strtolower( $shortcode_filters['category'] ) );
+
+            if( isset($place['categories']) ) {
+
+                foreach ( $place['categories'] as $cat ) {
+                if ( in_array( strtolower( $cat['name'] ), $show_categories_only ) or in_array( strtolower( $cat['id'] ), $show_categories_only ) ) {
+                    $found_category = true;
+                }
+            }
+                
+            }
+            
+
+            if ( false == $found_category ) {
+                $use_me = false;
+            }
+        }
 
 
 		if ( true == $render_shortcode ) {
@@ -987,8 +1012,8 @@ if ( ! empty( $map->map_all_control['display_listing'] ) && $map->map_all_contro
 
 	if ( isset( $options['perpage'] ) and $options['perpage'] > 0 ) {
 		$map->map_all_control['wpgmp_listing_number'] = sanitize_text_field( $options['perpage'] );
-	} elseif ( isset( $_GET['perpage'] ) and $map->map_all_control['url_filter'] == 'true' ) {
-		$map->map_all_control['wpgmp_listing_number'] = sanitize_text_field( $_GET['perpage'] );
+	} elseif ( isset( $_GET['perpage'] ) and $map->map_all_control['url_filter'] == 'true' ) {// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$map->map_all_control['wpgmp_listing_number'] = sanitize_text_field( $_GET['perpage'] );// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
 	if ( ! isset( $map->map_all_control['wpgmp_display_sorting_filter'] ) ) {
@@ -1612,3 +1637,4 @@ if ( ! empty( $css_rules ) ) {
 }
 
 return $map_output;
+// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals

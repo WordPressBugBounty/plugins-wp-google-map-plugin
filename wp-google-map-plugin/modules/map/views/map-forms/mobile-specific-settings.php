@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 /**
  * Map's mobile specific setting(s).
  *
@@ -105,3 +109,4 @@ $form->add_element(
 		'show'    => 'false',
 	)
 );
+/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */

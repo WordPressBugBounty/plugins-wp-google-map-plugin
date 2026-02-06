@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * Model base class
  *
@@ -300,7 +303,8 @@ if ( ! class_exists( 'FlipperCode_Model_Base' ) ) {
 		protected function throw_errors() {
 
 			if ( isset( $this->errors ) and is_array( $this->errors ) ) {
-
+	
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Internal error messages for display
 				throw new Exception( implode( '<br>', $this->errors ) );
 
 			}

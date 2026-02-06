@@ -1,5 +1,7 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 class WPGMP_Helper{
 
 	public static function wpgmp_get_all_post_types(){
@@ -88,7 +90,13 @@ class WPGMP_Helper{
 		// === Enqueue Scripts Conditionally
 		foreach ( $scripts as $key => $script ) {
 			if ( empty( $assets ) || in_array( $key, $assets ) ) {
-				wp_enqueue_script( $script['handle'], $script['src'], $script['deps'], WPGMP_VERSION, $in_footer );
+				if ( isset( $wpgmp_settings['wpgmp_auto_fix'] ) && $wpgmp_settings['wpgmp_auto_fix'] !== 'true' && $context === 'frontend' ) {
+
+					wp_register_script( $script['handle'], $script['src'], $script['deps'], WPGMP_VERSION, $in_footer );
+					
+				}else{
+					wp_enqueue_script( $script['handle'], $script['src'], $script['deps'], WPGMP_VERSION, $in_footer );
+				}
 			}
 		}
 	
@@ -103,7 +111,11 @@ class WPGMP_Helper{
 	
 		$styles = apply_filters( "wpgmp_{$context}_styles", $styles );
 		foreach ( $styles as $handle => $src ) {
-			wp_enqueue_style( $handle, $src, [], WPGMP_VERSION );
+			if ( isset( $wpgmp_settings['wpgmp_auto_fix'] ) && $wpgmp_settings['wpgmp_auto_fix'] !== 'true' && $context === 'frontend' ) {
+				wp_register_style( $handle, $src, [], WPGMP_VERSION );
+			}else{
+				wp_enqueue_style( $handle, $src, [], WPGMP_VERSION );
+			}
 		}
 	
 		// === Localization for JS
@@ -129,6 +141,7 @@ class WPGMP_Helper{
 			'use_advanced_marker' => $wpgmp_settings['wpgmp_advanced_marker'] ?? false,
 			'set_timeout' => min(1000, intval($wpgmp_settings['wpgmp_set_timeout'] ?? 100)),
 			'debug_mode' => (
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only debug flag, no state change.
 				(isset($_GET['wpgmp_debug']) && $_GET['wpgmp_debug'] === 'true') ||
 				(isset($wpgmp_settings['wpgmp_debug_mode']) && $wpgmp_settings['wpgmp_debug_mode'] === 'true')
 			)
@@ -172,6 +185,7 @@ class WPGMP_Helper{
 		}
 	
 		$localized = [
+			'pro_version_feature'       =>  __( 'This feature requires the Pro version of the plugin.', 'wp-google-map-plugin' ),
 			'ajax_url'                  => admin_url( 'admin-ajax.php' ),
 			'nonce'                     => wp_create_nonce( 'fc-call-nonce' ),
 			'copy_icon'                 => WPGMP_IMAGES . 'copy-to-clipboard.png',
@@ -403,9 +417,7 @@ Enjoy the aroma of freshly roasted beans all day long.';
 				'map_all_control[wpgmp_secondary_color]',
 				'map_geojson_setting',
 				'map_all_control[listing_openoption]',
-				'map_all_control[wpgmp_searchbar_placeholder]',
 				'wpgmp_search_placeholders_list',
-				'map_all_control[wpgmp_category_placeholder]',
 				'map_all_control[wpgmp_display_print_option]',
 				
 			],
@@ -476,7 +488,7 @@ Enjoy the aroma of freshly roasted beans all day long.';
 
 	public static function wpgmp_features_limits_msg() {
 
-		return esc_html__('You\'re using Leaflet. Google Maps–only features have been greyed out.','wp-google-maps');
+		return esc_html__('You\'re using Leaflet. Google Maps–only features have been greyed out.','wp-google-map-plugin');
 
 	}
 

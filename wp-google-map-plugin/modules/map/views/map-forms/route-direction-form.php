@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 /**
  * Route Direction setting for google maps.
  *
@@ -26,3 +30,4 @@ $form->add_element(
 		'after'  => '</div>',
 	)
 );
+/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */

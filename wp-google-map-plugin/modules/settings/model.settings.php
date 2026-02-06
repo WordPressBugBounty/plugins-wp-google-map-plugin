@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /**
  * Class: WPGMP_Model_Settings
  * Handles plugin settings save and navigation registration.

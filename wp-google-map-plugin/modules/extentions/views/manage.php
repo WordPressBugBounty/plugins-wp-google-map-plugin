@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 /**
  *
  * @author Flipper Code <hello@flippercode.com>
@@ -222,3 +226,4 @@
 	);
 
     $form->render();
+	/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */

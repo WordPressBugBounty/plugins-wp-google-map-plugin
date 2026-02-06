@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 /**
  * Contro Positioning over google maps.
  *
@@ -74,3 +78,4 @@ $form->add_element(
 		'after'  => '</div>',
 	)
 );
+/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */

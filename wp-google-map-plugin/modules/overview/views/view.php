@@ -1,4 +1,8 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals */
 /**
  * This class used to manage settings page in backend.
  *
@@ -117,7 +121,7 @@ ob_start(); // Start output buffering
                                 <div>
                                     <div class="fc-mb-15">
                                         <h5 class="fc-card-title"><?php esc_html_e( 'WP MAPS', 'wp-google-map-plugin' ); ?></h5>
-                                        <div class="fc-font-14"><?php esc_html_e( 'Installed Version:', 'wp-google-map-plugin' ); ?> <?php echo WPGMP_VERSION; ?></div>
+                                        <div class="fc-font-14"><?php esc_html_e( 'Installed Version:', 'wp-google-map-plugin' ); ?> <?php echo esc_html(WPGMP_VERSION); ?></div>
                                     </div>
                                     <div class="fc-card-text">
                                         <?php esc_html_e( 'For each of our plugins, we have created step by step detailed tutorials that help you to get started quickly.', 'wp-google-map-plugin' ); ?>
@@ -271,6 +275,7 @@ ob_start(); // Start output buffering
                 'id' => 'static_3',
                 'title' => __( 'Hooks Documentation Published', 'wp-google-map-plugin' ),
                 'desc'  => sprintf(
+                    /* translators: %s: Docs link. */
                     esc_html__( 'Explore our new developer docs covering filters and actions: %s', 'wp-google-map-plugin' ),
                     '<a href="https://www.wpmapspro.com/map-hooks/" target="_blank">' . esc_html__( 'View Docs', 'wp-google-map-plugin' ) . '</a>'
                 ),
@@ -293,9 +298,9 @@ ob_start(); // Start output buffering
         foreach ($saved_notifications as $item) {
             $date = isset($item['date']) ? strtotime($item['date']) : time();
             $day_key = 'Earlier';
-            if (date('Y-m-d', $date) === date('Y-m-d')) {
+            if (gmdate('Y-m-d', $date) === gmdate('Y-m-d')) {
                 $day_key = 'Today';
-            } elseif (date('Y-m-d', $date) === date('Y-m-d', strtotime('-1 day'))) {
+            } elseif (gmdate('Y-m-d', $date) === gmdate('Y-m-d', strtotime('-1 day'))) {
                 $day_key = 'Yesterday';
             }
 
@@ -322,7 +327,7 @@ ob_start(); // Start output buffering
             echo '</div>';
             echo '<div class="fc-notification-content">';
             echo '<h6 class="fc-notification-title">' . esc_html($note['title']) . '</h6>';
-            echo '<div class="fc-notification-description">' . $note['desc'] . '</div>';
+            echo '<div class="fc-notification-description">' . esc_html($note['desc']) . '</div>';
             echo '</div>';
             echo '</div>';
             echo '</div>';
@@ -351,3 +356,4 @@ $form->add_element(
 );
 
 $form->render();
+/* phpcs:enable WordPress.NamingConventions.PrefixAllGlobals */
