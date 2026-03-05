@@ -7,7 +7,7 @@
  * Author URI: https://weplugins.com/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Version: 4.9.1
+ * Version: 4.9.2
  * Text Domain: wp-google-map-plugin
  * Domain Path: /lang
 */
@@ -74,7 +74,6 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			add_action( 'widgets_init', 				  [ $this, 'wpgmp_google_map_widget'] );
 			add_action( 'wp_enqueue_scripts', 			  [ $this, 'wpgmp_frontend_scripts'] );
 			add_action( 'wp_ajax_wpgmp_ajax_call', 		  [ $this, 'wpgmp_ajax_call'] );
-			add_action( 'wp_ajax_nopriv_wpgmp_ajax_call', [ $this, 'wpgmp_ajax_call'] );
 			
 			add_filter( 'media_upload_tabs', 			  [ $this, 'wpgmp_google_map_tabs_filter']);
 			add_filter( 'fc-dummy-placeholders', 		  [ $this, 'wpgmp_apply_placeholders'] );
@@ -233,23 +232,38 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			}
 		}
 
-		function wpgmp_return_final_capability($cap){
+		function wpgmp_return_final_capability( $cap ) {
 
-			if ( current_user_can('administrator') ) {
+			global $wpdb;
+			if ( current_user_can( 'administrator' ) ) {
 				return $cap;
 			}
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading page parameter for checking capability only
-			$frontend_page = ( !is_admin() && isset( $_GET['location_id'] ) && !empty( $_GET['location_id'] ) && isset($_GET['doaction']) && !empty($_GET['doaction']) && isset($_GET['cap']) && !empty($_GET['cap']) && $_GET['cap'] == 'wpgmp_manage_location' ) ? true : false;
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading page parameter for checking capability only
-			$backend_page = ( is_admin() && isset( $_GET['location_id'] ) && !empty( $_GET['location_id'] ) && isset($_GET['doaction']) && !empty($_GET['doaction']) && isset($_GET['page']) && !empty($_GET['page']) && $_GET['page'] == 'wpgmp_manage_location' ) ? true : false;
 
-			if($frontend_page || $backend_page){
-		
-				$model_factory = new WPGMP_Model();
-				$location_obj = $model_factory->create_object( 'location' );
-				$location_data = $location_obj->fetch( array( array( 'location_id', '=', $_GET['location_id'] ) ) );
-				if(get_current_user_id() != $location_data[0]->location_author){
-					$cap = '';
+			// Sanitize GET values
+			$location_id = isset( $_GET['location_id'] ) ? absint( sanitize_text_field( $_GET['location_id'] ) ) : '';
+			$doaction    = isset( $_GET['doaction'] ) ? sanitize_text_field( wp_unslash( $_GET['doaction'] ) ) : '';
+			$get_cap     = isset( $_GET['cap'] ) ? sanitize_text_field( wp_unslash( $_GET['cap'] ) ) : '';
+			$page        = isset( $_GET['page'] ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : '';
+
+
+			$backend_page = ( 
+				is_admin() && 
+				! empty( $location_id ) && 
+				! empty( $doaction ) && 
+				$page === 'wpgmp_manage_location' 
+			) ? true : false;
+
+			if ( $backend_page ) {
+
+				$location_data = $wpdb->get_results( $wpdb->prepare(
+				    "SELECT * FROM {$wpdb->prefix}map_locations WHERE location_id = %d",
+				    intval( $location_id )
+				) );
+
+				if ( ! empty( $location_data ) && isset( $location_data[0]->location_author ) ) {
+					if ( get_current_user_id() !== (int) $location_data[0]->location_author ) {
+						$cap = '';
+					}
 				}
 			}
 
@@ -1351,7 +1365,7 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			
 			if ( is_admin() )
 			$this->wpgmp_define( 'WPGMP_SLUG', 'wpgmp_view_overview' );
-			$this->wpgmp_define( 'WPGMP_VERSION', '4.9.1' );
+			$this->wpgmp_define( 'WPGMP_VERSION', '4.9.2' );
 			$this->wpgmp_define( 'WPGMP_FOLDER', basename( dirname( __FILE__ ) ) );
 			$this->wpgmp_define( 'WPGMP_DIR', plugin_dir_path( __FILE__ ) );
 			$this->wpgmp_define( 'WPGMP_ICONS_DIR', WPGMP_DIR . '/assets/images/icons/' );

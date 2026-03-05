@@ -1346,7 +1346,7 @@ div.categories_filter select::-ms-expand {
 div.wpgmp_listing_container {
   float: left;
   width: 100%;
-  margin: 10px 0 0;
+  margin: 0 0 0;
 }
 
 .wpgmp_pagination {
@@ -2461,7 +2461,7 @@ Accordion layout
 }
 
 .wpgmp_filter_wrappers {
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
   float: left;
   width: 100%;
 }
@@ -2519,7 +2519,7 @@ Accordion layout
   float: left;
   width: 100%;
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 #wpgmp_tab_3 .wpgmp_cat_title span {

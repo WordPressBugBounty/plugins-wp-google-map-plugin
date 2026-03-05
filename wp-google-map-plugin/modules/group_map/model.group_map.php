@@ -32,6 +32,7 @@ if ( ! class_exists( 'WPGMP_Model_Group_Map' ) ) {
 		function __construct() {
 			$this->table     = TBL_GROUPMAP;
 			$this->unique    = 'group_map_id';
+			$this->load_columns();
 			$this->validations = [
 				'group_map_title' => [
 					'req'     => esc_html__( 'Please enter title for marker category.', 'wp-google-map-plugin' ),

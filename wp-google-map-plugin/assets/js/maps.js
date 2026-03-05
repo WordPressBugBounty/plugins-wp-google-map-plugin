@@ -4939,6 +4939,15 @@ fit_bounds() {
         map_obj.set_marker_cluster();
       }, 2000);
     }
+    const externalEvent = new CustomEvent("wpgmpApplyFilters", { detail: { map_obj }, });
+    document.dispatchEvent(externalEvent);
+
+    // document.addEventListener("wpgmpApplyFilters", function (event) {
+    //         // Access map object
+    //     const mapObj = event.detail.map_obj;
+    //     console.log("Map object received:", mapObj);
+    //     jQuery('.slp_results_count').text(mapObj.show_places.length);
+    // });
   }
   update_filters() {
     var map_obj = this;

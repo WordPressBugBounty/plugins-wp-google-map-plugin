@@ -40,6 +40,12 @@ if ( ! class_exists( 'FlipperCode_Model_Base' ) ) {
 		 */
 		private $query = '';
 		/**
+		 * Table columns assoicated to the model class.
+		 *
+		 * @var string
+		 */
+		public $allowed_columns = [];
+		/**
 		 * Table name assoicated to the model class.
 		 *
 		 * @var string
@@ -156,6 +162,29 @@ if ( ! class_exists( 'FlipperCode_Model_Base' ) ) {
 			return true;
 
 		}
+
+		/**
+		 * Load and cache the list of valid database columns for the current table.
+		 *
+		 * This method retrieves the
+		 */
+
+		protected function load_columns() {  
+
+			if ( empty( $this->table ) ) {         
+				return;     
+			}     
+
+			global $wpdb;    
+
+			$columns = $wpdb->get_results( "DESCRIBE `{$this->table}`", ARRAY_A );  
+
+			if ( ! empty( $columns ) ) {   
+
+				$this->allowed_columns = array_column( $columns, 'Field' ); 
+
+			} 
+		}
 		/**
 		 * Retrive records from database based on conditional array.
 		 *
@@ -189,15 +218,17 @@ if ( ! class_exists( 'FlipperCode_Model_Base' ) ) {
 						}
 						if ( isset( $this->pog_attribute_type[ $fcv_array[ $i ][0] ]['db_attributes'] ) && 'NUMERIC' != $this->pog_attribute_type[ $fcv_array[ $i ][0] ]['db_attributes'][0] && 'SET' != $this->pog_attribute_type[ $fcv_array[ $i ][0] ]['db_attributes'][0] ) {
 							if ( 1 == $GLOBALS['configuration']['db_encoding'] ) {
-								$value        = $this->is_column( $fcv_array[ $i ][2] ) ? 'BASE64_DECODE(' . $fcv_array[ $i ][2] . ')' : "'" . $fcv_array[ $i ][2] . "'";
+
+								$value = $this->is_column( $fcv_array[ $i ][2] ) ? 'BASE64_DECODE(`' . trim( $fcv_array[ $i ][2], '`' ) . '`)'     : "'" . $this->escape( $fcv_array[ $i ][2] ) . "'";
 								$this->query .= 'BASE64_DECODE(`' . $fcv_array[ $i ][0] . '`) ' . $fcv_array[ $i ][1] . ' ' . $value;
 							} else {
-								$value        = $this->is_column( $fcv_array[ $i ][2] ) ? $fcv_array[ $i ][2] : "'" . $this->escape( $fcv_array[ $i ][2] ) . "'";
+
+								$value = $this->is_column( $fcv_array[ $i ][2] ) ? '`' . trim( $fcv_array[ $i ][2], '`' ) . '`' : "'" . $this->escape( $fcv_array[ $i ][2] ) . "'";
 								$this->query .= '`' . $fcv_array[ $i ][0] . '` ' . $fcv_array[ $i ][1] . ' ' . $value;
 							}
 						} else {
 
-							$value = $this->is_column( $fcv_array[ $i ][2] ) ? $fcv_array[ $i ][2] : "'" . $fcv_array[ $i ][2] . "'";
+							$value = $this->is_column( $fcv_array[ $i ][2] ) ? '`' . trim( $fcv_array[ $i ][2], '`' ) . '`' : "'" . $this->escape( $fcv_array[ $i ][2] ) . "'";
 							if ( 'in' == strtolower( $fcv_array[ $i ][1] ) ) {
 								$value = str_replace( "'", '', $value );
 								$value = '(' . $value . ')';
@@ -326,16 +357,18 @@ if ( ! class_exists( 'FlipperCode_Model_Base' ) ) {
 		 * @param  string $value Column name.
 		 * @return boolean        True or False.
 		 */
-		public static function is_column( $value ) {
-
-			if ( strlen( $value ) > 2 ) {
-				if ( substr( $value, 0, 1 ) == '`' && substr( $value, strlen( $value ) - 1, 1 ) == '`' ) {
-					return true;
-				}
-				return false;
-			}
-
-			return false;
+		public function is_column( $value ) {
+		    if ( ! is_string( $value ) || empty( $this->allowed_columns ) ) {
+		        return false;
+		    }
+		 
+		    $clean = trim( $value, '`' );
+		 
+		    if ( ! preg_match( '/^[a-zA-Z0-9_]+$/', $clean ) ) {
+		        return false;
+		    }
+		 
+		    return in_array( $clean, $this->allowed_columns, true );
 		}
 		/**
 		 * Convert XML to array.

@@ -522,11 +522,34 @@ if ( ! class_exists( 'FlipperCode_List_Table_Helper' ) ) {
 		 * @return string    Winner element.
 		 */
 		function usort_reorder( $a, $b ) {
-
-			$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : '';
-			$order   = ( ! empty( $_GET['order'] ) ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'asc';
-			$result  = strcmp( $a[ $orderby ], $b[ $orderby ] );
-			return ( 'asc' == $order ) ? $result : -$result;
+ 
+			/* ---- Allowed sortable columns (WHITELIST) ---- */
+			$sortable_columns = $this->get_sortable_columns();
+			$allowed_orderby  = array_keys( $sortable_columns );
+		 
+			/* ---- Validate orderby ---- */
+			$orderby = isset($_GET['orderby'])
+				? sanitize_key( wp_unslash( $_GET['orderby'] ) )
+				: $this->primary_col;
+		 
+			if ( ! in_array( $orderby, $allowed_orderby, true ) ) {
+				$orderby = $this->primary_col;
+			}
+		 
+			/* ---- Validate order ---- */
+			$order = isset($_GET['order'])
+				? strtolower( sanitize_key( wp_unslash( $_GET['order'] ) ) )
+				: 'asc';
+		 
+			$order = ( $order === 'desc' ) ? 'desc' : 'asc';
+		 
+			/* ---- Prevent undefined index notices ---- */
+			$value_a = isset($a[$orderby]) ? $a[$orderby] : '';
+			$value_b = isset($b[$orderby]) ? $b[$orderby] : '';
+		 
+			$result = strcmp( (string) $value_a, (string) $value_b );
+		 
+			return ( $order === 'asc' ) ? $result : -$result;
 		}
 		/**
 		 * Get bulk actions.
@@ -703,117 +726,137 @@ if ( ! class_exists( 'FlipperCode_List_Table_Helper' ) ) {
 		/**
 		 * Prepare records before print.
 		 */
-		function prepare_items() {
 
+		function prepare_items() {
+		 
 			global $wpdb;
+		 
 			$columns               = $this->get_columns();
 			$hidden                = array();
 			$sortable              = $this->get_sortable_columns();
 			$this->_column_headers = array( $columns, $hidden, $sortable );
+		 
 			$this->process_bulk_action();
+		 
 			$query = ( empty( $this->sql ) ) ? 'SELECT * FROM ' . $this->table : $this->sql;
-			if( isset( $_GET['page'] ) && !empty( $_GET['page'] ) ){
-				$query = apply_filters('fc_manage_page_basic_query', $query , sanitize_text_field( wp_unslash( $_GET['page'] ) ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-
+		 
+			if ( isset( $_GET['page'] ) && ! empty( $_GET['page'] ) ) {
+				$query = apply_filters(
+					'fc_manage_page_basic_query',
+					$query,
+					sanitize_text_field( wp_unslash( $_GET['page'] ) )
+				);
 			}
-			
-			if ( isset( $_GET['page'] ) && isset( $_REQUEST['s'] ) ) {
-				$page = sanitize_text_field( wp_unslash( $_GET['page'] ) );
-				$search = sanitize_text_field( wp_unslash( $_REQUEST['s'] ) );
-			} else {
-				$page = '';
-				$search = '';
-			}
-
-			if(!$this->noSql){ 
-
-				if ( $this->admin_listing_page_name == $page && '' != $search ) {
-
+		 
+			$page   = isset($_GET['page']) ? sanitize_text_field( wp_unslash($_GET['page']) ) : '';
+			$search = isset($_REQUEST['s']) ? sanitize_text_field( wp_unslash($_REQUEST['s']) ) : '';
+		 
+			if ( ! $this->noSql ) {
+		 
+				/* ================= SEARCH ================= */
+				if ( $this->admin_listing_page_name == $page && '' !== $search ) {
+		 
 					$s = $search;
-					$first_column = '';
-					$remaining_columns  = array();
 					$prepare_query_with_placeholders = '';
 					$prepare_args_values = array();
-
+					$first = true;
+		 
 					foreach ( $this->columns as $column_name => $columnlabel ) {
-
-						if ( "{$this->primary_col}" == $column_name ) {
-							 continue;
+		 
+						if ( $column_name === $this->primary_col ) {
+							continue;
+						}
+		 
+						if (
+							isset($this->searchExclude)
+							&& ! empty($this->searchExclude)
+							&& in_array($column_name, $this->searchExclude, true)
+						) {
+							continue;
+						}
+		 
+						$prepare_args_values[] = '%' . $wpdb->esc_like( $s ) . '%';
+		 
+						if ( $first ) {
+							$prepare_query_with_placeholders .= " WHERE {$column_name} LIKE %s";
+							$first = false;
 						} else {
-							
-							if ( empty( $first_column ) ) {
-								
-								$first_column = $column_name;
-								$prepare_args_values[] = $wpdb->esc_like($s);
-								$prepare_query_with_placeholders = " WHERE {$column_name} LIKE '%%%s%%'";
-
-
-							} else {
-								
-								$remaining_columns[] = $column_name;
-								if ( isset($this->searchExclude) && !empty($this->searchExclude) && !in_array( $column_name, $this->searchExclude ) ) {
-									$prepare_args_values[] = $wpdb->esc_like($s);
-									$prepare_query_with_placeholders .= " or {$column_name} LIKE '%%%s%%'";
-
-								}
-
-								if(!isset($this->searchExclude) ){
-									$prepare_args_values[] = $wpdb->esc_like($s);
-									$prepare_query_with_placeholders .= " or {$column_name} LIKE '%%%s%%'";
-								}
-							}
+							$prepare_query_with_placeholders .= " OR {$column_name} LIKE %s";
 						}
 					}
-
-					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $this->table and $this->primary_col are internal class properties
-					$this->data = $wpdb->get_results(  $wpdb->prepare( 'SELECT * FROM '.$this->table. $prepare_query_with_placeholders. ' order by '.$this->primary_col.' desc', $prepare_args_values )  );
-					
-				}
-				else if ( isset($_GET['orderby']) && ! empty( $_GET['orderby'] ) && isset($_GET['order']) && ! empty( $_GET['order'] ) ) {
-									
-					$_GET['orderby'] = sanitize_text_field( $_GET['orderby'] );
-					$_GET['order'] = sanitize_text_field( $_GET['order'] );
-					$orderby = ( !empty( $_GET['orderby'] ) ) ? wp_unslash( $_GET['orderby'] ) : $this->primary_col;
-					$order   = ( !empty( $_GET['order'] ) ) ? wp_unslash( $_GET['order'] ) : 'asc';
-
-						$query_to_run  = $query;
-						$query_to_run .= " order by {$orderby} {$order}";
-						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query_to_run is safe
-						$this->data = $wpdb->get_results( $query_to_run ); 
-						
+		 
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					$this->data = $wpdb->get_results(
+						$wpdb->prepare(
+							'SELECT * FROM ' . $this->table . $prepare_query_with_placeholders .
+							' ORDER BY ' . $this->primary_col . ' DESC',
+							$prepare_args_values
+						)
+					);
+		 
+				/* ================= SAFE ORDER BY ================= */
+				} elseif ( isset($_GET['orderby']) && isset($_GET['order']) ) {
+		 
+					/* ---- WHITELIST ORDERBY ---- */
+					$sortable_columns = $this->get_sortable_columns();
+					$allowed_orderby  = array_keys( $sortable_columns );
+		 
+					$orderby = sanitize_key( wp_unslash( $_GET['orderby'] ) );
+		 
+					if ( ! in_array( $orderby, $allowed_orderby, true ) ) {
+						$orderby = $this->primary_col;
 					}
-				 else {
-						
-						$query_to_run = $query;
-						$query_to_run .= " order by {$this->primary_col} desc";
-						$query_to_run = apply_filters('fc_manage_page_default_query', $query_to_run , sanitize_text_field( wp_unslash( $_GET['page'] ) ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-
-						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $query_to_run is safe
-						$this->data = $wpdb->get_results( $query_to_run );
-						
-					}
-				
-			}else{
-
-				if(isset($this->external) && !empty($this->external)){
-					$this->data   = $this->external;
+		 
+					/* ---- STRICT ORDER VALIDATION ---- */
+					$order = strtolower( sanitize_key( wp_unslash( $_GET['order'] ) ) );
+					$order = ( $order === 'desc' ) ? 'DESC' : 'ASC';
+		 
+					$query_to_run  = $query;
+					$query_to_run .= " ORDER BY {$orderby} {$order}";
+		 
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- identifiers are whitelist validated
+					$this->data = $wpdb->get_results( $query_to_run );
+		 
+				/* ================= DEFAULT ================= */
+				} else {
+		 
+					$query_to_run  = $query;
+					$query_to_run .= " ORDER BY {$this->primary_col} DESC";
+		 
+					$query_to_run = apply_filters(
+						'fc_manage_page_default_query',
+						$query_to_run,
+						$page
+					);
+		 
+					// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+					$this->data = $wpdb->get_results( $query_to_run );
 				}
-
-			}
-
-			$current_page = apply_filters('fc_tabular_set_pagination_page',$this->get_pagenum()) ; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-
-			$total_items  = count( $this->data );
-			if ( is_array( $this->data ) && ! empty( $this->data ) ) {
-				$this->found_data = @array_slice( $this->data, ( ( $current_page - 1 ) * $this->per_page ), $this->per_page );
+		 
 			} else {
-				$this->found_data = array();
+		 
+				if ( isset($this->external) && ! empty($this->external) ) {
+					$this->data = $this->external;
+				}
 			}
-
-			$p_data = array( 'total_items' => $total_items,	'per_page' => $this->per_page );
-			$this->set_pagination_args($p_data);
+		 
+			$current_page = apply_filters(
+				'fc_tabular_set_pagination_page',
+				$this->get_pagenum()
+			);
+		 
+			$total_items = count( $this->data );
+		 
+			$this->found_data = ( is_array($this->data) && ! empty($this->data) )
+				? array_slice( $this->data, ( ($current_page - 1) * $this->per_page ), $this->per_page )
+				: array();
+		 
+			$this->set_pagination_args(array(
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+			));
+		 
 			$this->items = $this->found_data;
-
 		}
 
 	}

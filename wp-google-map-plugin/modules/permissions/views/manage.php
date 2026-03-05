@@ -54,7 +54,7 @@ if ( ! empty( $wpgmp_permissions ) ) {
 					'current' => ( ( @array_key_exists( $wpgmp_mkey, $urole->capabilities ) == true ) ? 'true' : 'false' ),
 					'before'  => '<div class="fc-1">',
 					'after'   => '</div>',
-					'class'   => 'fc-form-check-input chkbox_class',
+					'class'   => 'fc-form-check-input chkbox_class wpgmp_author_permission',
 				)
 			);
 		}

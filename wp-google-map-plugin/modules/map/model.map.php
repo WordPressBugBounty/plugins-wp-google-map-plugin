@@ -49,6 +49,7 @@ if ( ! class_exists( 'WPGMP_Model_Map' ) ) {
 			);
 			$this->table  = TBL_MAP;
 			$this->unique = 'map_id';
+			$this->load_columns();
 		}
 		/**
 		 * Admin menu for CRUD Operation

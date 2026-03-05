@@ -7,7 +7,7 @@ Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 3.4
 Tested up to: 6.9
-Stable tag: 4.9.1
+Stable tag: 4.9.2
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -232,6 +232,12 @@ Contact us at [Support](https://weplugins.com/support/).
 
 == Changelog ==
 
+= 4.9.2 =
+* Fix : Dispatch an event within apply_filters to retrieve map_obj.
+* Fix : Fix the security issue in the shortcode parameter.
+* Fix : Fix the sql injection security issue.
+* Fix : Small UI changes for frontend map and listing.
+
 = 4.9.1 =
 * Fix : Implemented escaped and safer google maps HTML output.
 
@@ -326,6 +332,9 @@ Contact us at [Support](https://weplugins.com/support/).
 
 
 == Upgrade Notice ==
+
+= 4.9.2 =
+– Upgrade for more stable release
 
 = 4.9.1 =
 – Upgrade for more stable release

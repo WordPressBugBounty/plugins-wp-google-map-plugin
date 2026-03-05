@@ -22,6 +22,7 @@ if ( ! class_exists( 'WPGMP_Model_Location' ) ) {
 		public function __construct() {
 			$this->table     = TBL_LOCATION;
 			$this->unique    = 'location_id';
+			$this->load_columns();
 			$this->validations = array(
 				'location_title'   => array(
 					'req'     => esc_html__( 'Please enter location title.', 'wp-google-map-plugin' ),

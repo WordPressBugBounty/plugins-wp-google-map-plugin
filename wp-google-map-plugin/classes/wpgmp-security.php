@@ -92,14 +92,21 @@ if ( ! class_exists( 'WPGMP_Security' ) ) {
             $value = trim( $value );
 
              // Either map widht is a just a plain number.
-            if ( is_numeric( $value ) ) {
-                return absint( $value );
-            }
+            
             
             // Or map width can be a number with % sign.
             $pattern = '/^([1-9][0-9]*)(%)?$/';
             if ( preg_match( $pattern, $value ) ) {
                 return $value;
+            }else if ( is_numeric( $value ) ) {
+                return absint( $value );
+            }else if( ! is_numeric( $value ) ){
+                $width = absint ( sanitize_text_field( $value ) );
+                if($width === 0){
+                    return '100%';
+                }else{
+                    return $width;
+                }
             }
             
             return '';
