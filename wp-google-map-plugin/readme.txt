@@ -2,12 +2,12 @@
 === WP Maps - Store Locator,Google Maps,OpenStreetMap,Mapbox,Listing,Directory & Filters ===
 Contributors:      flippercode
 Plugin Name:       WP MAPS
-Tags: store locator, google maps, openstreetmap, map, directory
+Tags: google maps, listing, store locator, openstreetmap, directory
 Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 3.4
 Tested up to: 6.9
-Stable tag: 4.9.2
+Stable tag: 4.9.3
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,93 +16,111 @@ WordPress map plugin for Google Maps, OpenStreetMap & Mapbox with store locator,
 
 == Description ==
 
-**WP Maps** is a powerful and user-friendly WordPress map plugin that supports both Google Maps and OpenStreetMap. With just a few clicks, you can create unlimited maps with custom markers, filterable listings, store locators, and dynamic infowindows. Perfect for real estate listings, directories, multi-location businesses, and more.
+**Build stunning, interactive maps in minutes — no coding required.**
 
-* Unlimited maps and locations
-* Store locator with search and filters
-* Custom markers, SVG support, and clustering
-* Info windows on click or hover
-* KML, KMZ, GeoJSON, and layer integration
-* OpenStreetMap Maps require no API key; Google Maps support available
+**WP Maps** is a powerful yet easy-to-use WordPress map plugin that supports both Google Maps and OpenStreetMap. Create fully customized maps in just a few clicks with custom markers, searchable listings, and smart filters. Whether you’re building a store locator, showcasing locations, or simply adding a map to your contact page — this plugin makes it effortless.
 
-== Try It Now ==
+Perfect for:
 
-Explore the plugin instantly using the WordPress Playground:
-👉 [Try WP Maps](https://playground.wordpress.net/?plugin=wp-google-map-plugin)
+* Business directories
+* Store locators
+* Service area maps
+* Contact pages 
+* Any map-based project you can think of.
+
+**Easily create simple or advanced maps tailored to your needs, fully customizable to match your website’s branding.**
 
 == Features ==
 
-### 🗺️ Map Creation & Display
-* Create unlimited maps with shortcode support
-* Display maps in posts, pages, widgets
-* Auto-center by visitor location or assigned locations
-* Show/hide markers on load
+**Free Version**
 
-### 📌 Marker & Infowindow Controls
-* Use custom or pre-built marker icons (SVG supported)
-* Infowindows on click or hover
-* Bounce/drop animation effects
-* Center or zoom on marker click
+* **Create interactive maps with custom markers and dynamic listings, with search and category filters.**
+* Use Google Maps, OpenStreetMap, or Mapbox as your map provider, with easy switching between them.
+* Create multiple maps with different locations and listing.
+* Enable sorting and pagination for listings.
+* Enable marker clustering from the backend to group markers on the map.
+* Automatically update the map center based on filtered markers.
+* Display maps easily using shortcodes.
+* Display maps in posts, pages, and widgets.
+* Manage listing and marker infowindow content from the backend using dynamic placeholders.
+* Auto-center the map using custom latitude and longitude, the visitor's location, or backend-assigned locations.
+* Fully GDPR-compliant Google Maps integration for privacy-friendly usage.
+* Draw circles, squares, polygons, and custom shapes on the map.
+* Display infowindows on click or hover for shapes, similar to marker infowindows.
+* Display a circle and marker at the center location of the map.
+* Show or hide markers on page load.
+* Supports Snazzy Maps.
+* Use custom or pre-built marker icons.
+* Open marker infowindows on click or hover.
+* Add bounce and drop animation effects to markers on map load.
+* Center or zoom the map on marker click.
+* Show listings below the map with search and filters.
+* Reset map button to restore the map to its original state.
+* Predefined color schemes for listings.
+* Custom color schemes for listings.
+* Show infowindow when a listing title is clicked.
+* Custom map color schemes.
+* Set primary and secondary colors.
+* Add custom CSS.
+* Responsive and mobile-friendly design.
+* Enable or disable zoom, fullscreen, map type, scale, Street View, camera, and "Locate Me" controls.
+* Position map controls at different locations on the map.
+* Limit map panning using SW/NE coordinates.
+* Enable KML/KMZ, traffic, transit, and bicycling layers.
+* GeoJSON support.
+* Import/export settings via JSON.
+* Localization ready.
+* Add custom styling.
+* Works with all major page builders and themes.
+* Fully documented with step by step and easy to understand instructions.
+* Cross-browser compatible — tested on IE8+, Chrome, Firefox, and Safari.
 
-### 📋 Listings & Filters
-* Show listing below map with search and filters
-* Enable category, sort, per-page, and filters
-* Customize listing layout
-* Show info window when listing title is clicked
 
-### 🎨 Design & Themes
-* Custom map color schema
-* Set primary/secondary color
-* Add custom CSS
-* Responsive & mobile-friendly design
-
-### ⚙️ Controls & Settings
-* Enable/disable zoom, fullscreen, map type, scale, street view
-* Enable search box and "locate me" controls
-* Limit panning using SW/NE coordinates
-
-### 🌐 Map Layers & Data
-* KML/KMZ, Traffic, Transit, Bicycling layers
-* GeoJSON support
-* Import/export settings via JSON
-
-### 💻 Compatibility
-Works with all major page builders and themes:
-* Elementor, WPBakery, Divi, Gutenberg, Brizy, Beaver Builder
-* Astra, Avada, OceanWP, GeneratePress, Hello Elementor
-
-Here is a quick highlight on the numerous customizable features offered by the free and pro versions of the <strong>[WP MAPS PRO Version](https://www.wpmapspro.com?utm_source=wordpress&utm_medium=liteversion&utm_campaign=freemium&utm_id=freemium)</strong>.
+**Pro Version** <strong>[WP MAPS PRO Version](https://www.wpmapspro.com?utm_source=wordpress&utm_medium=liteversion&utm_campaign=freemium&utm_id=freemium)</strong>.
  
-* NO API Key required for OpenStreetMap Maps and API Keys is required for Google Maps.
-* Fully GDPR-compliant Google Maps integration for secure and privacy-friendly usage
-* Use Google Maps, OpenStreetMap or Mapbox as your map provider. Easy switching between each map provider.
-* Show a listing of locations below the map with built-in search and filter controls
-* Use SVG as marker icons – choose from pre-built SVGs or upload your own
-* Apply multiple Infowindow designs for custom popup layouts
-* Create unlimited Google/Leaflet Maps with custom marker icons, categories, and assigned locations
-* Add and manage multiple locations with rich content and info windows
-* Assign multiple locations to a single map for complex layouts
-* Show info windows on click or hover with customizable content
-* Display maps on any post, page, or widget using shortcode or sidebar widget
-* Define custom center latitude/longitude for each map
-* Auto-center map based on assigned locations
-* Categorize locations for filterable maps and better organization
-* Choose from over 100+ ready-to-use colorful markers via [Map Icons Collection](https://mapicons.mapsmarker.com/)
-* Enable marker clustering to handle dense location areas
-* Choose from 4 map types: Roadmap, Satellite, Hybrid, and Terrain
-* Set custom map height, width, and zoom level easily
-* Enable or disable map drag, scroll zoom, and interactivity
-* Add layers like Traffic, Transit, Bicycling, and more for enhanced context
-* Support for Street View, 45° imagery, and POV controls
-* Add visual elements like circles to highlight areas
-* Fully responsive maps – looks perfect on desktop, tablet, and mobile
-* Cross-browser compatible – tested on IE8+, Chrome, Firefox, Safari
-* Multilingual ready – supports WPML and translation plugins
-* Works across WordPress Multisite, with network-wide activation support
-* Easily style maps using Snazzy Maps
-* Built-in search control to locate places directly on the frontend map
-* Filter markers on the frontend by category
-* Seamless upgrade to Pro – no data loss when switching from free to paid
+* **Includes all features of the free version.**
+* Multiple designs and layouts for marker infowindows.
+* Multiple designs and layouts for listing records.
+* Display blog posts, pages, or any existing data (custom post types) from your WordPress site with just a few clicks.
+* Display posts using custom fields.
+* Display posts using the Advanced Custom Fields (ACF) plugin.
+* Create unlimited custom filters in the backend based on custom fields, taxonomies, or ACF fields — ideal for complex map searches.
+* Enable searching and filtering using URL parameters — great for sharing filtered map views.
+* List and grid-style listing layouts.
+* Allow users to filter markers by location and radius (in kilometers or miles).
+* Filter markers based on marker categories.
+* Filter markers based on custom taxonomy terms of any custom post type.
+* Display multiple custom routes between locations directly on your map for a seamless navigation experience.
+* Customize color, opacity, and weight for each route.
+* Directions API integration to allow users to get directions between locations on the map.
+* Add custom HTML, images, or videos as map controls for interactive, branded maps.
+* Prevent overlapping markers with automatic spiderfier effects — perfect for clustered or identical locations.
+* Enable smart tabs for Categories, Directions, Routes, and Nearby Amenities to enhance user experience.
+* Admins can apply additional customization to infowindows and listing layouts from the backend.
+* Apply country restrictions on search results and autosuggestions for more accurate results.
+* Advanced feature: Integrate with Microsoft Clarity, Google Analytics 4, Meta Pixel, and Zapier to track marker click events.
+* Access 25+ additional add-ons available with the Pro version, offering extended functionality.
+* Use SVGs as marker icons — choose from pre-built options or upload your own.
+* Automatically center the map based on assigned locations.
+* Show nearby amenities like ATMs, banks, and stores to provide useful local context.
+* Draggable markers and option to open infowindows by default on page load.
+* Categorize locations for better organization and filterable maps.
+* Choose from 100+ ready-to-use colorful markers via Map Icons Collection.
+* Multilingual ready — supports WPML and other translation plugins.
+* Compatible with WordPress Multisite, with network-wide activation support.
+* Easily style maps using Snazzy Maps.
+* Built-in search control to locate places directly on the frontend map.
+* Install sample data to get started quickly.
+* Role-based access control for backend pages.
+* Seamless upgrade to Pro — no data loss when switching from free to paid.
+
+== Important Links ==
+
+* [Live Demos](https://www.wpmapspro.com/examples/)
+* [Tutorials](https://www.wpmapspro.com/tutorials/)
+* [Hooks & Filters](https://www.wpmapspro.com/map-hooks/)
+* [Support](https://weplugins.com/support/)
+* [Custom Development Available](https://weplugins.com/contact/)
 
 ### 🏬 Use Cases – Map Solutions for Every Business
 
@@ -195,12 +213,10 @@ Yes! Visit [WP Maps Tutorials](https://www.wpmapspro.com/tutorials/).
 = What if I need help or support? =
 Contact us at [Support](https://weplugins.com/support/).
 
-== Important Links ==
+== Try It Now ==
 
-* [Live Demos](https://www.wpmapspro.com/try-now/)
-* [Tutorials](https://www.wpmapspro.com/tutorials/)
-* [Hooks & Filters](https://www.wpmapspro.com/map-hooks/)
-* [Support](https://weplugins.com/support/)
+Explore the plugin instantly using the WordPress Playground:
+👉 [Try WP Maps](https://playground.wordpress.net/?plugin=wp-google-map-plugin)
 
 == Screenshots ==
 
@@ -231,6 +247,10 @@ Contact us at [Support](https://weplugins.com/support/).
 
 
 == Changelog ==
+
+= 4.9.3 =
+* Added : Drawing feature (allows users to draw shapes such as polygons, polylines, rectangles, and circles on the map).
+* Fix : Fixed file upload security issues for custom templates by improving sanitization and adding permission checks.
 
 = 4.9.2 =
 * Fix : Dispatch an event within apply_filters to retrieve map_obj.
@@ -332,6 +352,9 @@ Contact us at [Support](https://weplugins.com/support/).
 
 
 == Upgrade Notice ==
+
+= 4.9.3 =
+– Upgrade for new features and more stable release
 
 = 4.9.2 =
 – Upgrade for more stable release

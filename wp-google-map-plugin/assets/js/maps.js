@@ -5515,6 +5515,19 @@ fit_bounds() {
       map_obj.selectedShape.setCenter(new google.maps.LatLng(parseFloat(latlng[0]), parseFloat(latlng[1])));
   });
 
+  $('button[name="wpgmp_save_drawing"]').click(function (e) {
+
+      var all_shapes_cordinate = [];
+
+      all_shapes_cordinate.push('polylines=' + map_obj.wpgmp_save_polylines().join('::'));
+      all_shapes_cordinate.push('polygons=' + map_obj.wpgmp_save_polygons().join('::'));
+      all_shapes_cordinate.push('circles=' + map_obj.wpgmp_save_circles().join('::'));
+      all_shapes_cordinate.push('rectangles=' + map_obj.wpgmp_save_rectangles().join('::'));
+
+      map_obj.wpgmp_save_shapes(all_shapes_cordinate);
+
+  });
+
 
   }
   
@@ -8667,6 +8680,10 @@ window.WpgmpBaseMaps = WpgmpBaseMaps;
       });
     }
 
+    wpgmp_save_shapes(allcordinate) {
+      $("input[name='shapes_values']").val(allcordinate.join("|"));
+    }
+
     wpgmp_shape_complete(shape, type) {
       var map_obj = this;
       map_obj.setSelection(shape);
@@ -8685,6 +8702,178 @@ window.WpgmpBaseMaps = WpgmpBaseMaps;
           });
         }
       }
+    }
+
+    wpgmp_save_polylines() {
+      var all_polylines = [];
+      var map_obj = this;
+      var wpgmp_polylines = map_obj.wpgmp_polylines;
+      var all_shape_events = map_obj.wpgmp_shape_events;
+
+      for (var i = 0; i < wpgmp_polylines.length; i++) {
+        var polyline_cordinate = [];
+
+        var cordinates = wpgmp_polylines[i].getPath();
+
+        var settings =
+          wpgmp_polylines[i].strokeWeight +
+          "," +
+          wpgmp_polylines[i].strokeOpacity +
+          "," +
+          wpgmp_polylines[i].strokeColor;
+        var events = "";
+        $.each(all_shape_events, function (j, shape_event) {
+          if (shape_event.shape == wpgmp_polylines[i]) {
+            events = shape_event.url + "***" + shape_event.message;
+          }
+        });
+
+        cordinates.forEach(function (latlng, index) {
+          var latlngin = [latlng.lat(), latlng.lng()];
+          polyline_cordinate.push(latlngin);
+        });
+
+        all_polylines.push(
+          polyline_cordinate.join("----") + "..." + settings + "..." + events
+        );
+      }
+      return all_polylines;
+    }
+
+    wpgmp_save_polygons() {
+      var all_polygons = [];
+      var map_obj = this;
+      var wpgmp_polygons = map_obj.wpgmp_polygons;
+      var all_shape_events = map_obj.wpgmp_shape_events;
+
+      for (var i = 0; i < wpgmp_polygons.length; i++) {
+        var polygon_cordinate = [];
+
+        var cordinates = wpgmp_polygons[i].getPath();
+
+        var settings =
+          wpgmp_polygons[i].strokeWeight +
+          "," +
+          wpgmp_polygons[i].strokeOpacity +
+          "," +
+          wpgmp_polygons[i].strokeColor +
+          "," +
+          wpgmp_polygons[i].fillColor +
+          "," +
+          wpgmp_polygons[i].fillOpacity;
+
+        var events = "";
+        $.each(all_shape_events, function (j, shape_event) {
+          if (shape_event.shape == wpgmp_polygons[i]) {
+            events = shape_event.url + "***" + shape_event.message;
+          }
+        });
+
+        cordinates.forEach(function (latlng, index) {
+          var latlngin = [latlng.lat(), latlng.lng()];
+
+          if (latlng.lat() !== "" && latlng.lng() !== "")
+            polygon_cordinate.push(latlngin);
+        });
+
+        all_polygons.push(
+          polygon_cordinate.join("----") + "..." + settings + "..." + events
+        );
+      }
+
+      return all_polygons;
+    }
+
+    wpgmp_save_circles() {
+      var all_circles = [];
+      var map_obj = this;
+      var wpgmp_circles = map_obj.wpgmp_circles;
+      var all_shape_events = map_obj.wpgmp_shape_events;
+
+      for (var i = 0; i < wpgmp_circles.length; i++) {
+        var circle_cordinate = [];
+
+        var latlng = wpgmp_circles[i].getCenter();
+
+        var settings =
+          wpgmp_circles[i].strokeWeight +
+          "," +
+          wpgmp_circles[i].strokeOpacity +
+          "," +
+          wpgmp_circles[i].strokeColor +
+          "," +
+          wpgmp_circles[i].fillColor +
+          "," +
+          wpgmp_circles[i].fillOpacity +
+          "," +
+          wpgmp_circles[i].getRadius();
+
+        var events = "";
+        $.each(all_shape_events, function (j, shape_event) {
+          if (shape_event.shape == wpgmp_circles[i]) {
+            events = shape_event.url + "***" + shape_event.message;
+          }
+        });
+
+        var latlngin = [latlng.lat(), latlng.lng()];
+
+        if (latlng.lat() !== "" && latlng.lng() !== "")
+          circle_cordinate.push(latlngin);
+
+        all_circles.push(
+          circle_cordinate.join("----") + "..." + settings + "..." + events
+        );
+      }
+
+      return all_circles;
+    }
+
+    wpgmp_save_rectangles() {
+      var all_rectangles = [];
+      var map_obj = this;
+      var wpgmp_rectangles = map_obj.wpgmp_rectangles;
+      var all_shape_events = map_obj.wpgmp_shape_events;
+      for (var i = 0; i < wpgmp_rectangles.length; i++) {
+        var rectangle_cordinate = [];
+
+        var settings =
+          wpgmp_rectangles[i].strokeWeight +
+          "," +
+          wpgmp_rectangles[i].strokeOpacity +
+          "," +
+          wpgmp_rectangles[i].strokeColor +
+          "," +
+          wpgmp_rectangles[i].fillColor +
+          "," +
+          wpgmp_rectangles[i].fillOpacity;
+
+        var events = "";
+        $.each(all_shape_events, function (j, shape_event) {
+          if (shape_event.shape == wpgmp_rectangles[i]) {
+            events = shape_event.url + "***" + shape_event.message;
+          }
+        });
+
+        var latlng = wpgmp_rectangles[i].getBounds().getSouthWest();
+
+        var latlngin = [latlng.lat(), latlng.lng()];
+
+        if (latlng.lat() !== "" && latlng.lng() !== "")
+          rectangle_cordinate.push(latlngin);
+
+        latlng = wpgmp_rectangles[i].getBounds().getNorthEast();
+
+        var latlngin = [latlng.lat(), latlng.lng()];
+
+        if (latlng.lat() !== "" && latlng.lng() !== "")
+          rectangle_cordinate.push(latlngin);
+
+        all_rectangles.push(
+          rectangle_cordinate.join("----") + "..." + settings + "..." + events
+        );
+      }
+
+      return all_rectangles;
     }
 
 

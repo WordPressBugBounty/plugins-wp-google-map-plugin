@@ -52,8 +52,8 @@ ob_start(); // Start output buffering
                         'icon'  => 'wep-icon-list'
                     ],
                     [
-                        'title' => __( 'Drawing', 'wp-google-map-plugin' ),
-                        'desc'  => __( 'Draw and highlight areas using polygons, circles, or rectangles on your map.', 'wp-google-map-plugin' ),
+                        'title' => __( 'Routes', 'wp-google-map-plugin' ),
+                        'desc'  => __( 'Easily create routes with multiple waypoints and visualize them directly on the map.', 'wp-google-map-plugin' ),
                         'icon'  => 'wep-icon-ruler'
                     ],
                     [

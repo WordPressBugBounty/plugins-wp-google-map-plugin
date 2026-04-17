@@ -26,7 +26,17 @@ if ( isset( $_REQUEST['_wpnonce'] ) ) {
 		$data = $_POST;
 	}
 }
-// Drawing related code for database entry removed as it was meant for pro only 
+
+if ( ! empty( $_POST['save_shapes'] ) && $_POST['save_shapes'] == 'save_shapes' ) {
+	$map_id                                       = intval( wp_unslash( $_POST['map_id'] ) );
+	$data['polylines']                            = $_POST['shapes_values'];
+	$infowindow['map_polyline_setting']['shapes'] = serialize( $data );
+	$in_loc_data                                  = array(
+		'map_polyline_setting' => $infowindow['map_polyline_setting']['shapes'],
+	);
+	$where['map_id']                              = $map_id;
+	$insertId                                     = FlipperCode_Database::insert_or_update( TBL_MAP, $in_loc_data, $where );
+}
 
 if ( ! empty( $_GET['map_id'] ) ) {
 	$map_id       = intval( wp_unslash( $_GET['map_id'] ) );
@@ -72,7 +82,6 @@ $form->add_element(
 		'before' => '<div class="fc-12">',
 		'after'  => '</div>',
 		'tutorial_link' => 'https://www.wpmapspro.com/docs/how-to-draw-in-google-maps/',
-		'pro' => true
 	)
 );
 
@@ -305,7 +314,6 @@ $form->add_element(
 			'wpgmp_save_drawing', array(
 				'value' => esc_html__( 'Save Drawing', 'wp-google-map-plugin' ),
 				'class' => 'fc-btn fc-btn-primary fc-btn-sm',
-				'pro' => true
 			)
 		)
 	);

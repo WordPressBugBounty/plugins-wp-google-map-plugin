@@ -526,10 +526,6 @@ Enjoy the aroma of freshly roasted beans all day long.';
 				</div>
 				<div class="pro-feature-list-item">	
 					<i class="wep-icon-flash wep-icon-xl fc-text-purple"></i>
-					<?php esc_html_e( 'Polygon, Circle & More', 'wp-google-map-plugin' ); ?>
-				</div>
-				<div class="pro-feature-list-item">	
-					<i class="wep-icon-flash wep-icon-xl fc-text-purple"></i>
 					<?php esc_html_e( 'Routes', 'wp-google-map-plugin' ); ?>
 				</div>
 				<div cla  ss="pro-feature-list-item">		
@@ -574,6 +570,10 @@ Enjoy the aroma of freshly roasted beans all day long.';
 				<div class="pro-feature-list-item">	
 					<i class="wep-icon-flash wep-icon-xl fc-text-purple"></i>
 					<?php esc_html_e( 'Import/Export', 'wp-google-map-plugin' ); ?>
+				</div>
+				<div class="pro-feature-list-item">	
+					<i class="wep-icon-flash wep-icon-xl fc-text-purple"></i>
+					<?php esc_html_e( '18+ Add-ons', 'wp-google-map-plugin' ); ?>
 				</div>
 			</div>
 

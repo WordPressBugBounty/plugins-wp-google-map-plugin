@@ -31,57 +31,86 @@ if ( ! class_exists( 'FlipperCode_Initialise_Core' ) ) {
 
 		function fc_load_template() {
 
-			check_ajax_referer( 'fc-call-nonce', 'nonce' );
-			$response      = array();
-			$data          = $_POST;
-			$core_dir_path = plugin_dir_path( dirname( __FILE__ ) );
-			$core_dir_url  = plugin_dir_url( dirname( __FILE__ ) );
-			
+            check_ajax_referer( 'fc-call-nonce', 'nonce' );
 
-			$core_dir_path = apply_filters( 'fc_template_plugin_core_dir_path', $core_dir_path, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+            // ✅ Capability check (adjust if needed)
+            if ( ! is_user_logged_in() || ! current_user_can( 'edit_posts' ) ) {
+                wp_send_json_error( array( 'message' => 'Unauthorized access' ) );
+            }
 
-			$core_dir_url = apply_filters( 'fc_template_plugin_core_dir_url', $core_dir_url, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+            $response      = array();
+            $data          = $_POST;
+            $core_dir_path = plugin_dir_path( dirname( __FILE__ ) );
+            $core_dir_url  = plugin_dir_url( dirname( __FILE__ ) );
+            
 
-			$data = apply_filters( 'fc_template_plugin_ajax_post_data', $data, $core_dir_path ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+            $core_dir_path = apply_filters( 'fc_template_plugin_core_dir_path', $core_dir_path, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
+            $core_dir_url = apply_filters( 'fc_template_plugin_core_dir_url', $core_dir_url, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
-			$template      = sanitize_file_name($data['template_name']);
-			$template_type = sanitize_text_field($data['template_type']);
+            $data = apply_filters( 'fc_template_plugin_ajax_post_data', $data, $core_dir_path ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
-			if ( isset( $data['template_name'] ) ) {
-				$layout_file = $core_dir_path . 'templates/' . $template_type . '/' . $template . '/' . $template . '.html';
-				$layout_url  = $core_dir_url . 'templates/' . $template_type . '/' . $template . '/' . $template . '.html';
-				ob_start();
-				include_once $layout_file;
-				$content = ob_get_contents();
-				ob_clean();
-			}
+            // ✅ Validate inputs safely
+            $template      = isset( $data['template_name'] ) ? sanitize_file_name( $data['template_name'] ) : '';
+            $template_type = isset( $data['template_type'] ) ? sanitize_key( $data['template_type'] ) : '';
 
-			if ( isset( $data['template_source'] ) ) {
-				$content = stripcslashes( $data['template_source'] );
-			}
+            // ✅ Whitelist allowed template types
+            $allowed_templates = array( 'item', 'infowindow', 'listing' );
 
-			if ( $content == '' ) {
-				$response['html'] = '<div id="messages" class="error">Sorry layout ' . $layout_id . ' not found.</div>';
-			} else {
-				$temp_content = $content;
-				$content      = "<div class='fc-infobox-". $template . " fc-" . $template_type . '-' . $template . "'>" . apply_filters( 'fc-dummy-placeholders', $content ) . '</div>'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+            if ( empty( $template ) || empty( $template_type ) || ! in_array( $template_type, $allowed_templates, true ) ) {
+                wp_send_json_error( array( 'message' => 'Invalid template request' ) );
+            }
 
-				$columns      = isset($data['columns']) ? $data['columns'] : '';
-				if ( $columns == '' ) {
-					$columns = 1;}
-				$parent_div = '<div class="fc-component-block fc-columns-' . $columns . '">';
-				for ( $i = 0;$i < $columns;$i++ ) {
-					$parent_div .= '<div class="fc-component-content">' . $content . '</div>';
-				}
-				$parent_div            .= '</div>';
-				$response['html']       = $parent_div;
-				$response['sourcecode'] = $temp_content;
-			}
-			echo json_encode( $response );
-			exit;
+            $content      = '';
+            $temp_content = '';
 
-		}
+            if ( isset( $data['template_name'] ) ) {
+
+                $base_dir = trailingslashit( $core_dir_path . 'templates/' );
+
+                $layout_file = $base_dir . $template_type . '/' . $template . '/' . $template . '.html';
+
+                // ✅ Resolve real path
+                $real_base   = realpath( $base_dir );
+                $real_file   = realpath( $layout_file );
+
+                // ✅ Prevent directory traversal
+                if ( $real_file === false || strpos( $real_file, $real_base ) !== 0 ) {
+                    wp_send_json_error( array( 'message' => 'Invalid file path detected' ) );
+                }
+
+                if ( file_exists( $real_file ) ) {
+                    ob_start();
+                    include $real_file;
+                    $content = ob_get_clean();
+                }
+            }
+
+            // ✅ Allow direct template source (sanitize properly)
+            if ( isset( $data['template_source'] ) ) {
+                $content = wp_kses_post( stripslashes( $data['template_source'] ) );
+            }
+
+            if ( empty( $content ) ) {
+                $response['html'] = '<div id="messages" class="error">Sorry layout ' . $layout_id . ' not found.</div>';
+            } else {
+                $temp_content = $content;
+                $content      = "<div class='fc-infobox-". esc_attr($template) . " fc-" . esc_attr($template_type) . '-' . esc_attr($template) . "'>" . apply_filters( 'fc-dummy-placeholders', $content ) . '</div>'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+
+                $columns      = isset($data['columns']) ? $data['columns'] : '';
+                if ( $columns == '' ) {
+                    $columns = 1;}
+                $parent_div = '<div class="fc-component-block fc-columns-' . esc_attr($columns) . '">';
+                for ( $i = 0;$i < $columns;$i++ ) {
+                    $parent_div .= '<div class="fc-component-content">' . $content . '</div>';
+                }
+                $parent_div            .= '</div>';
+                $response['html']       = $parent_div;
+                $response['sourcecode'] = $temp_content;
+            }
+            wp_send_json( $response );
+
+        }
 
 		function fc_communication() {
 
