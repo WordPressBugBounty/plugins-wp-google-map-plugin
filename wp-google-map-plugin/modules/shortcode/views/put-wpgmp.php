@@ -1550,6 +1550,9 @@ if ( isset( $map->map_all_control['apply_custom_design'] ) && $map->map_all_cont
 ' . $base_class . '.fc-infobox-root {
     --fc-infobox-primary:' . $secondary_color . ';
 }
+.wpgmp-actions a {
+        background-color: ' . $secondary_color . ' ! important;
+}
 
 ';
 
@@ -1589,7 +1592,7 @@ background: ' . $primary_color . ';
 		$css_rules[] = $base_class . '.wpgmp_tabs_container .wpgmp_tabs li a.active, ' . $base_class . '.fc-primary-bg, ' . $base_class . '.wpgmp_infowindow .fc-badge.info, ' . $base_class . '.wpgmp_toggle_main_container .amenity_type:hover, ' . $base_class . '
 .wpgmp_direction_container p input.wpgmp_find_direction,
 ' . $base_class . '.wpgmp_nearby_container .wpgmp_find_nearby_button, ' . $base_class . '.fc-label-info, ' . $base_class . '.fc-badge.info, ' . $base_class . '.wpgmp_pagination span,
-' . $base_class . '.wpgmp_pagination a, ' . $base_class . 'div.categories_filter select,  ' . $base_class . '.wpgmp_toggle_container, ' . $base_class . '.categories_filter_reset_btn,' . $base_class . '.categories_filter input[type="button"], ' . $base_class . '.categories_filter_reset_btn:hover {
+' . $base_class . '.wpgmp_pagination a, ' . $base_class . 'div.categories_filter select,  ' . $base_class . '.wpgmp_toggle_container, ' . $base_class . '.categories_filter_reset_btn,' . $base_class . '.categories_filter input[type="button"], ' . $base_class . '.categories_filter_reset_btn:hover{
         background-color: ' . $secondary_color . ';
 }
 
@@ -1607,6 +1610,9 @@ background: ' . $primary_color . ';
 
 ' . $base_class . '.fc-infobox-root {
     --fc-infobox-primary:' . $secondary_color . ';
+}
+.wpgmp-actions a {
+        background-color: ' . $secondary_color .  ' ! important;
 }
 
 ';

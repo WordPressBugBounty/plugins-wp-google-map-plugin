@@ -1,13 +1,13 @@
 
-=== WP Maps - Store Locator,Google Maps,OpenStreetMap,Mapbox,Listing,Directory & Filters ===
+=== WP Maps - Google Maps,OpenStreetMap,Mapbox,Store Locator,Listing,Directory & Filters ===
 Contributors:      flippercode
 Plugin Name:       WP MAPS
-Tags: google maps, listing, store locator, openstreetmap, directory
+Tags: google maps, map plugin, wp google map, store locator, openstreetmap
 Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 3.4
 Tested up to: 6.9
-Stable tag: 4.9.3
+Stable tag: 4.9.4
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -16,13 +16,13 @@ WordPress map plugin for Google Maps, OpenStreetMap & Mapbox with store locator,
 
 == Description ==
 
-**Build stunning, interactive maps in minutes — no coding required.**
+**Build stunning, interactive maps with listing in minutes — no coding required.**
 
 **WP Maps** is a powerful yet easy-to-use WordPress map plugin that supports both Google Maps and OpenStreetMap. Create fully customized maps in just a few clicks with custom markers, searchable listings, and smart filters. Whether you’re building a store locator, showcasing locations, or simply adding a map to your contact page — this plugin makes it effortless.
 
 Perfect for:
 
-* Business directories
+* Business directories and listings
 * Store locators
 * Service area maps
 * Contact pages 
@@ -34,7 +34,7 @@ Perfect for:
 
 **Free Version**
 
-* **Create interactive maps with custom markers and dynamic listings, with search and category filters.**
+* **Easily create interactive Google Maps with custom markers, smart search, filters, and paginated listings.**
 * Use Google Maps, OpenStreetMap, or Mapbox as your map provider, with easy switching between them.
 * Create multiple maps with different locations and listing.
 * Enable sorting and pagination for listings.
@@ -78,7 +78,7 @@ Perfect for:
 
 **Pro Version** <strong>[WP MAPS PRO Version](https://www.wpmapspro.com?utm_source=wordpress&utm_medium=liteversion&utm_campaign=freemium&utm_id=freemium)</strong>.
  
-* **Includes all features of the free version.**
+* **Includes everything in the free version, plus powerful premium features:**
 * Multiple designs and layouts for marker infowindows.
 * Multiple designs and layouts for listing records.
 * Display blog posts, pages, or any existing data (custom post types) from your WordPress site with just a few clicks.
@@ -114,9 +114,22 @@ Perfect for:
 * Role-based access control for backend pages.
 * Seamless upgrade to Pro — no data loss when switching from free to paid.
 
+== Live Demos ==
+
+* [All Live Demos](https://weplugins.com/wp-maps/)
+* [Complete Map With Paginated Listing](https://weplugins.com/wp-maps/live-demo/complete-map-with-search-filters-listing-pagination/)
+* [Shapes on Google Maps](https://weplugins.com/wp-maps/live-demo/draw-shapes-on-google-maps/)
+* [Store Locator](https://weplugins.com/wp-maps/live-demo/a-complete-store-locator/)
+* [Events Listing](https://weplugins.com/wp-maps/live-demo/events-listing/)
+* [Service Center Listings](https://weplugins.com/live-demo/service-center-listings/)
+* [Real Estate Listing](https://weplugins.com/wp-maps/live-demo/real-estate-listing/)
+* [Restaurants Listing](https://weplugins.com/wp-maps/live-demo/restaurants-listing/)
+* [With Get Directions](https://weplugins.com/wp-maps/live-demo/with-get-directions/)
+* [Snazzy Maps Demo](https://weplugins.com/wp-maps/live-demo/snazzy-maps-demo/)
+
+
 == Important Links ==
 
-* [Live Demos](https://www.wpmapspro.com/examples/)
 * [Tutorials](https://www.wpmapspro.com/tutorials/)
 * [Hooks & Filters](https://www.wpmapspro.com/map-hooks/)
 * [Support](https://weplugins.com/support/)
@@ -248,6 +261,10 @@ Explore the plugin instantly using the WordPress Playground:
 
 == Changelog ==
 
+= 4.9.4 =
+* Fix : Resolved a conflict with Font Awesome 4 icons not rendering correctly when the map is loaded.
+* Fix : Frontend UI issue fixed.
+
 = 4.9.3 =
 * Added : Drawing feature (allows users to draw shapes such as polygons, polylines, rectangles, and circles on the map).
 * Fix : Fixed file upload security issues for custom templates by improving sanitization and adding permission checks.
@@ -352,6 +369,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 
 == Upgrade Notice ==
+
+= 4.9.4 =
+– Upgrade for new features and more stable release
 
 = 4.9.3 =
 – Upgrade for new features and more stable release
