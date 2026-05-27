@@ -6,8 +6,8 @@ Tags: google maps, map plugin, wp google map, store locator, openstreetmap
 Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 3.4
-Tested up to: 6.9
-Stable tag: 4.9.4
+Tested up to: 7.0
+Stable tag: 4.9.5
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -114,7 +114,7 @@ Perfect for:
 * Role-based access control for backend pages.
 * Seamless upgrade to Pro — no data loss when switching from free to paid.
 
-== Live Demos ==
+== Free Version Live Demos ==
 
 * [All Live Demos](https://weplugins.com/wp-maps/)
 * [Complete Map With Paginated Listing](https://weplugins.com/wp-maps/live-demo/complete-map-with-search-filters-listing-pagination/)
@@ -126,6 +126,10 @@ Perfect for:
 * [Restaurants Listing](https://weplugins.com/wp-maps/live-demo/restaurants-listing/)
 * [With Get Directions](https://weplugins.com/wp-maps/live-demo/with-get-directions/)
 * [Snazzy Maps Demo](https://weplugins.com/wp-maps/live-demo/snazzy-maps-demo/)
+
+== Pro Version Live Demos ==
+
+* [All Live Demos](https://www.wpmapspro.com/examples/)
 
 
 == Important Links ==
@@ -261,6 +265,10 @@ Explore the plugin instantly using the WordPress Playground:
 
 == Changelog ==
 
+= 4.9.5 =
+* Fix : Fixed an authenticated stored XSS vulnerability in the `location_messages` parameter by improving input sanitization and output escaping.
+* Fix : Resolved Select2 dropdown style conflicts with other plugins by applying plugin-specific CSS selectors in the backend styles.
+
 = 4.9.4 =
 * Fix : Resolved a conflict with Font Awesome 4 icons not rendering correctly when the map is loaded.
 * Fix : Frontend UI issue fixed.
@@ -369,6 +377,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 
 == Upgrade Notice ==
+
+= 4.9.5 =
+– Upgrade for new features and more stable release
 
 = 4.9.4 =
 – Upgrade for new features and more stable release

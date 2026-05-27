@@ -165,7 +165,9 @@ if( !is_array( $infowindow_setting ) ){
 	$infowindow_setting = htmlspecialchars_decode($infowindow_setting);
 }
 
-$infowindow_sourcecode = apply_filters( 'wpgmp_infowindow_message',do_shortcode($infowindow_setting) , $map );
+$sanitized_infowindow = wp_kses_post( $infowindow_setting );
+
+$infowindow_sourcecode = apply_filters( 'wpgmp_infowindow_message', wp_kses_post(do_shortcode( $sanitized_infowindow ) ) , $map );
 
 $wpgmp_categorydisplayformat = isset($map->map_all_control['wpgmp_categorydisplayformat'])? $map->map_all_control['wpgmp_categorydisplayformat']: '';
 
@@ -629,7 +631,7 @@ if ( isset( $map_locations ) && is_array( $map_locations ) ) {
 			'title'          => $location->location_title,
 			'address'        => $location->location_address,
 			'source'         => 'manual',
-			'content'        => ( '' != $location->location_messages ) ? do_shortcode( stripcslashes( $location->location_messages ) ) : '',
+			'content'        => ( '' != $location->location_messages ) ? wp_kses_post( do_shortcode( wp_kses_post( stripcslashes( $location->location_messages ) ) ) ) : '',
 			'location'       => array(
 				'icon'                    => $c_icon ,
 				'lat'                     => $location->location_latitude,
@@ -805,7 +807,7 @@ if ( is_array( $map_data['places'] ) ) {
 
 
 		if ( true == $render_shortcode ) {
-			$place['content'] = do_shortcode( $place['content'] );
+			$place['content'] = wp_kses_post( do_shortcode( wp_kses_post( $place['content'] ) ) );
 		}
 
 		if ( '' == $place['location']['lat'] || '' == $place['location']['lng']) {
@@ -982,7 +984,7 @@ if ( ! empty( $map->map_all_control['display_listing'] ) && $map->map_all_contro
 	$render_shortcode = apply_filters( 'wpgmp_listing_render_shortcode', true, $map );
 
 	if ( $render_shortcode == true && is_string($listing_placeholder_content) && !empty($listing_placeholder_content) ) {
-		$listing_placeholder_text = do_shortcode( stripslashes( trim( $listing_placeholder_content ) ) );
+		$listing_placeholder_text = wp_kses_post( do_shortcode( wp_kses_post( stripslashes( trim( $listing_placeholder_content ) ) ) ) );
 	} else {
 		if(!empty($listing_placeholder_content) && is_string($listing_placeholder_content) && !empty($listing_placeholder_content) ){
 			$listing_placeholder_text = stripslashes( trim( $listing_placeholder_content ) );

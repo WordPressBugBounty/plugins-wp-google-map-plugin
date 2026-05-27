@@ -178,8 +178,11 @@ if ( ! class_exists( 'WPGMP_Model_Location' ) ) {
 			if ( isset( $_POST['entityID'] ) )
 			$entityID = intval( wp_unslash( $_POST['entityID'] ) );
 
-			if ( isset( $_POST['location_messages'] ) )
-			$data['location_messages'] = wp_unslash( $_POST['location_messages'] );
+			if ( isset( $_POST['location_messages'] ) ){
+				$data['location_messages'] = wp_kses_post(
+					wp_unslash( $_POST['location_messages'] )
+				);
+			}
 			
 			if ( isset( $_POST['extensions_fields'] ) )
 			$_POST['location_settings']['extensions_fields'] = $_POST['extensions_fields'];
@@ -296,7 +299,7 @@ if ( ! class_exists( 'WPGMP_Model_Location' ) ) {
 				'location_state'       => sanitize_text_field( wp_unslash( $_POST['location_state'] ) ),
 				'location_country'     => sanitize_text_field( wp_unslash( $_POST['location_country'] ) ),
 				'location_postal_code' => sanitize_text_field( wp_unslash( $_POST['location_postal_code'] ) ),
-				'location_messages'    => isset( $_POST['location_messages'] ) ? wp_unslash( $_POST['location_messages'] ) : '',
+				'location_messages'    => isset( $_POST['location_messages'] ) ? wp_kses_post( wp_unslash( $_POST['location_messages'] ) ) : '',
 				'location_animation'   => sanitize_text_field( wp_unslash( $_POST['location_animation'] ) ),
 				'location_author'      => get_current_user_id(),
 				'location_draggable'   => '',
