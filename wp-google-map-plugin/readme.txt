@@ -7,7 +7,7 @@ Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 3.4
 Tested up to: 7.0
-Stable tag: 4.9.5
+Stable tag: 4.9.6
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -265,6 +265,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 == Changelog ==
 
+= 4.9.6 =
+* Fix : load Google Maps API v3.64 to prevent DrawingManager deprecation issues,
+
 = 4.9.5 =
 * Fix : Fixed an authenticated stored XSS vulnerability in the `location_messages` parameter by improving input sanitization and output escaping.
 * Fix : Resolved Select2 dropdown style conflicts with other plugins by applying plugin-specific CSS selectors in the backend styles.
@@ -377,6 +380,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 
 == Upgrade Notice ==
+
+= 4.9.6 =
+– Upgrade for new features and more stable release
 
 = 4.9.5 =
 – Upgrade for new features and more stable release
