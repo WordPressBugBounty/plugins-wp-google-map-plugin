@@ -7,7 +7,7 @@
  * Author URI: https://weplugins.com/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Version: 4.9.6
+ * Version: 4.9.7
  * Text Domain: wp-google-map-plugin
  * Domain Path: /lang
 */
@@ -605,12 +605,43 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 		function wpgmp_ajax_call() {
 
 			check_ajax_referer( 'fc-call-nonce', 'nonce' );
-			$operation = sanitize_text_field( wp_unslash( $_POST['operation'] ) );
-			$value     = wp_unslash( $_POST );
-			if ( isset( $operation ) ) {
-				$this->$operation( $value );
+
+			// Only administrators should be able to perform these operations.
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__( 'Unauthorized request.', 'wp-google-map-plugin' ),
+					),
+					403
+				);
 			}
-			exit;
+
+			$operation = isset( $_POST['operation'] )
+				? sanitize_key( wp_unslash( $_POST['operation'] ) )
+				: '';
+
+			$value = wp_unslash( $_POST );
+
+			$allowed_operations = array(
+				'clean_database',
+				'upload_sampledata',
+				'save',
+				'map_fields',
+				'cancel_import',
+			);
+
+			if ( ! in_array( $operation, $allowed_operations, true ) ) {
+				wp_send_json_error(
+					array(
+						'message' => esc_html__( 'Invalid operation.', 'wp-google-map-plugin' ),
+					),
+					400
+				);
+			}
+
+			$this->{$operation}( $value );
+
+			wp_die();
 		}
 
 		/**
@@ -1365,7 +1396,7 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			
 			if ( is_admin() )
 			$this->wpgmp_define( 'WPGMP_SLUG', 'wpgmp_view_overview' );
-			$this->wpgmp_define( 'WPGMP_VERSION', '4.9.6' );
+			$this->wpgmp_define( 'WPGMP_VERSION', '4.9.7' );
 			$this->wpgmp_define( 'WPGMP_FOLDER', basename( dirname( __FILE__ ) ) );
 			$this->wpgmp_define( 'WPGMP_DIR', plugin_dir_path( __FILE__ ) );
 			$this->wpgmp_define( 'WPGMP_ICONS_DIR', WPGMP_DIR . '/assets/images/icons/' );

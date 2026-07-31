@@ -7,7 +7,7 @@ Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 3.4
 Tested up to: 7.0
-Stable tag: 4.9.6
+Stable tag: 4.9.7
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -114,20 +114,9 @@ Perfect for:
 * Role-based access control for backend pages.
 * Seamless upgrade to Pro — no data loss when switching from free to paid.
 
-== Free Version Live Demos ==
 
-* [All Live Demos](https://weplugins.com/wp-maps/)
-* [Complete Map With Paginated Listing](https://weplugins.com/wp-maps/live-demo/complete-map-with-search-filters-listing-pagination/)
-* [Shapes on Google Maps](https://weplugins.com/wp-maps/live-demo/draw-shapes-on-google-maps/)
-* [Store Locator](https://weplugins.com/wp-maps/live-demo/a-complete-store-locator/)
-* [Events Listing](https://weplugins.com/wp-maps/live-demo/events-listing/)
-* [Service Center Listings](https://weplugins.com/live-demo/service-center-listings/)
-* [Real Estate Listing](https://weplugins.com/wp-maps/live-demo/real-estate-listing/)
-* [Restaurants Listing](https://weplugins.com/wp-maps/live-demo/restaurants-listing/)
-* [With Get Directions](https://weplugins.com/wp-maps/live-demo/with-get-directions/)
-* [Snazzy Maps Demo](https://weplugins.com/wp-maps/live-demo/snazzy-maps-demo/)
 
-== Pro Version Live Demos ==
+== Live Demos ==
 
 * [All Live Demos](https://www.wpmapspro.com/examples/)
 
@@ -265,6 +254,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 == Changelog ==
 
+= 4.9.7 =
+* Security: Added capability validation to the wpgmp_ajax_call AJAX endpoint to prevent unauthorized access.
+
 = 4.9.6 =
 * Fix : load Google Maps API v3.64 to prevent DrawingManager deprecation issues,
 
@@ -380,6 +372,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 
 == Upgrade Notice ==
+
+= 4.9.7 =
+– Upgrade for new features and more stable release
 
 = 4.9.6 =
 – Upgrade for new features and more stable release
