@@ -25132,52 +25132,6 @@ MarkerClusterer.IMAGE_SIZES = [53, 56, 66, 78, 90];
             document.execCommand("copy"); // Copy the selected text to clipboard
         });
 
-        $('.fc_temp_access_button').on("click", function(e) {
-            e.preventDefault();
-            var temp_flag = false;
-            if($(this).hasClass("fc_temp_revoke_button")){
-                temp_flag = true;
-            }
-
-            var data = {
-                action: 'wpgmp_temp_access_ajax',
-                check_temp: temp_flag,
-                nonce: settings_obj.nonce,
-            }
-
-            jQuery.ajax({
-                type: "POST",
-                url: settings_obj.ajax_url,
-                dataType: "json",
-                data: data,
-                beforeSend: function() {
-                    $( ".fc-backend-loader" ).show();
-                },
-                success: function(response) {
-                    $( ".fc-backend-loader" ).hide();
-                    
-                    if(response.url){
-                        $(".fc_temp_access_button").addClass('fc_temp_revoke_button');
-                        $(".fc_temp_access_button").text(settings_obj.access_revoke);
-                        var access_url = '<input type="text" class="fc-form-control fc_login_link_copy" value="'+response.url+'"><span class="access_link_copy"><img src="'+settings_obj.copy_icon+'"></span>';
-                        $('.fc_access_url').html(access_url);
-                    }else if(response.error){
-                        $('.fc_access_url').text(response.error)
-                    }else if(response.deleted){
-                        $(".fc_temp_access_button").removeClass('fc_temp_revoke_button');
-                        $(".fc_temp_access_button").text(settings_obj.access_create);
-                        $('.fc_access_url').html('');
-                    }
-
-                }
- 
-
-            });
-
-        });
-
-        
-
         $('.default-custom-template').on("click", function() {
 
             $('#remove-current-template').modal('show');

@@ -23,7 +23,6 @@ if ( ! class_exists( 'FlipperCode_Initialise_Core' ) ) {
 		public function _register_flippercode_globals() {
 
 			add_action( 'wp_ajax_fc_communication', array( $this, 'fc_communication' ) );
-			add_action( 'wp_ajax_check_products_updates', array( $this, 'check_products_updates' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'load_products_common_resources' ) );
 			add_action( 'wp_ajax_core_templates', array( $this, 'fc_load_template' ) );
 
@@ -174,46 +173,6 @@ if ( ! class_exists( 'FlipperCode_Initialise_Core' ) ) {
 
 			$isLocalhost = ( $_SERVER['SERVER_NAME'] != 'localhost' ) ? true : false;
 			return $isLocalhost;
-		}
-
-
-		public function check_products_updates() {
-
-			$url      = 'https://www.flippercode.com/logs/wunpupdates/';
-			$plugin   = wp_unslash( $_POST['productslug'] );
-			$bodyargs = array(
-				'wunpu_action' => 'updates',
-				'plugin'       => $plugin,
-				'get_info'     => 'version',
-			);
-
-			$args     = array(
-				'method'  => 'POST',
-				'timeout' => 45,
-				'body'    => $bodyargs,
-			);
-			$response = wp_remote_post( $url, $args );
-			$response = (array) maybe_unserialize( $response['body'] );
-
-			if ( is_wp_error( $response ) ) {
-				$summary = array(
-					'status' => '0',
-					'error'  => $response->get_error_message(),
-				);
-			} else {
-
-				update_option( $plugin . '_latest_version', serialize( $response ) );
-
-				$version = trim( $response['new_version'], '"' );
-				$summary = array(
-					'status'        => '1',
-					'latestversion' => wp_unslash( trim( $version ) ),
-				);
-			}
-
-			echo json_encode( $summary );
-			exit;
-
 		}
 
 		public function _load_core_files() {

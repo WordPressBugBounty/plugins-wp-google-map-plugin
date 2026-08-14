@@ -104,7 +104,7 @@ if ( ! class_exists( 'Flippercode_Core_Controller' ) ) {
 
 			switch ( $view ) {
 				default:
-					$view = $view . '.php';
+					$view = basename( $view ) . '.php';
 			}
 
 			$this->modulePath = apply_filters('fc_backend_module_path', $this->modulePath,$this->entity, $view ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound

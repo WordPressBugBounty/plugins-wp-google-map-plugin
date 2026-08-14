@@ -2,6 +2,14 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+if ( ! current_user_can( 'manage_options' ) ) {
+    wp_die(
+        esc_html__( 'You do not have permission to perform this action.', 'wp-google-map-plugin' ),
+        '',
+        array( 'response' => 403 )
+    );
+}
+
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals
 /**
  * Template for Drawing Operation
@@ -14,22 +22,36 @@ global $wpdb;
 $modelFactory = new WPGMP_Model();
 $mapobj       = $modelFactory->create_object( 'map' );
 $map_records  = $mapobj->fetch();
-if ( isset( $_REQUEST['_wpnonce'] ) ) {
+
+if(isset($_GET['map_id'])){
+	if ( ! isset( $_REQUEST['_wpnonce'] ) ) {
+	    wp_die(
+	        esc_html__( 'Security check failed.', 'wp-google-map-plugin' ),
+	        '',
+	        array( 'response' => 403 )
+	    );
+	}
 
 	$nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
 
 	if ( ! wp_verify_nonce( $nonce, 'wpgmp-nonce' ) ) {
-
-		die( 'Cheating...' );
-
-	} else {
-		$data = $_POST;
+	    wp_die(
+	        esc_html__( 'Security check failed.', 'wp-google-map-plugin' ),
+	        '',
+	        array( 'response' => 403 )
+	    );
 	}
+	$data = $_POST;
+}else{
+	$data = [];
 }
+
+
+
 
 if ( ! empty( $_POST['save_shapes'] ) && $_POST['save_shapes'] == 'save_shapes' ) {
 	$map_id                                       = intval( wp_unslash( $_POST['map_id'] ) );
-	$data['polylines']                            = $_POST['shapes_values'];
+	$data['polylines'] = isset( $_POST['shapes_values'] ) ? wp_strip_all_tags( wp_unslash( $_POST['shapes_values'] ) ) : '';
 	$infowindow['map_polyline_setting']['shapes'] = serialize( $data );
 	$in_loc_data                                  = array(
 		'map_polyline_setting' => $infowindow['map_polyline_setting']['shapes'],

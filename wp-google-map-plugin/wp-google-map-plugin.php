@@ -7,7 +7,7 @@
  * Author URI: https://weplugins.com/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Version: 4.9.7
+ * Version: 4.9.8
  * Text Domain: wp-google-map-plugin
  * Domain Path: /lang
 */
@@ -73,7 +73,6 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			add_action( 'plugins_loaded', 				  [ $this, 'wpgmp_load_integrations'] );
 			add_action( 'widgets_init', 				  [ $this, 'wpgmp_google_map_widget'] );
 			add_action( 'wp_enqueue_scripts', 			  [ $this, 'wpgmp_frontend_scripts'] );
-			add_action( 'wp_ajax_wpgmp_ajax_call', 		  [ $this, 'wpgmp_ajax_call'] );
 			
 			add_filter( 'media_upload_tabs', 			  [ $this, 'wpgmp_google_map_tabs_filter']);
 			add_filter( 'fc-dummy-placeholders', 		  [ $this, 'wpgmp_apply_placeholders'] );
@@ -92,8 +91,6 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 				add_action( 'media_upload_ell_insert_gmap_svg_tab', [ $this, 'wpgmp_google_map_media_upload_svg_tab' ] );
 				add_action( 'wp_ajax_wpdfenabledebug', [ $this, 'wpgmp_enable_debug_mode' ] );
 				add_action( 'wp_ajax_nopriv_wpdfenabledebug', [ $this, 'wpgmp_enable_debug_mode' ] );
-				add_action( 'wp_ajax_wpgmp_temp_access_ajax', 		  [ $this, 'wpgmp_temp_access_ajax_callback'] );
-				add_action( 'wp_ajax_nopriv_wpgmp_temp_access_ajax', [ $this, 'wpgmp_temp_access_ajax_callback'] );
 
 				add_filter( 'plugin_row_meta', 			  [ $this,'wpgmp_add_plugin_row_custom_link'], 10, 2 );
 				add_filter( 'wpgmp_form_header_html', [ $this, 'wpgmp_add_custom_loader' ] );
@@ -272,9 +269,35 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 
 		function wpgmp_submit_uninstall_reason_action_perform(){
 
-			
+			if ( ! current_user_can( 'manage_options' ) ) {
+		        wp_die(
+		            esc_html__( 'You do not have permission to perform this action.', 'wp-google-map-plugin' ),
+		            '',
+		            array( 'response' => 403 )
+		        );
+		    }
+
+		    if ( ! isset( $_REQUEST['wpgmp_ajax_nonce'] ) ) {
+			    wp_die(
+			        esc_html__( 'Security check failed.', 'wp-google-map-plugin' ),
+			        '',
+			        array( 'response' => 403 )
+			    );
+			}
+
+			if ( ! wp_verify_nonce(
+			    sanitize_text_field( wp_unslash( $_REQUEST['wpgmp_ajax_nonce'] ) ),
+			    'wpgmp_ajax_nonce'
+			) ) {
+			    wp_die(
+			        esc_html__( 'Security check failed.', 'wp-google-map-plugin' ),
+			        '',
+			        array( 'response' => 403 )
+			    );
+			}
+
 		    global  $wp_version, $current_user;
-		    wp_verify_nonce($_REQUEST['wpgmp_ajax_nonce'], 'wpgmp_ajax_nonce');
+
 			$reason_id = isset($_REQUEST['reason_id']) ? stripcslashes(sanitize_text_field($_REQUEST['reason_id'])) : '';
 		    $basename  = isset($_REQUEST['plugin']) ? stripcslashes(sanitize_text_field($_REQUEST['plugin'])) : '';
 
@@ -349,18 +372,6 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 				WePlugins_Notification::init(); // call static init
 			}
 
-		}
-
-		
-
-		function wpgmp_temp_access_ajax_callback(){
-			check_ajax_referer( 'fc-call-nonce', 'nonce' );
-			$temp_access = new WPGMP_Temp_Access();
-			$response = $temp_access->wpgmp_temp_access_support();
-
-		    wp_send_json($response);
-
-		    exit();
 		}
 
 		/**
@@ -600,62 +611,54 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 		}
 
 		/**
-		 * Ajax Call
-		 */
-		function wpgmp_ajax_call() {
-
-			check_ajax_referer( 'fc-call-nonce', 'nonce' );
-
-			// Only administrators should be able to perform these operations.
-			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_send_json_error(
-					array(
-						'message' => esc_html__( 'Unauthorized request.', 'wp-google-map-plugin' ),
-					),
-					403
-				);
-			}
-
-			$operation = isset( $_POST['operation'] )
-				? sanitize_key( wp_unslash( $_POST['operation'] ) )
-				: '';
-
-			$value = wp_unslash( $_POST );
-
-			$allowed_operations = array(
-				'clean_database',
-				'upload_sampledata',
-				'save',
-				'map_fields',
-				'cancel_import',
-			);
-
-			if ( ! in_array( $operation, $allowed_operations, true ) ) {
-				wp_send_json_error(
-					array(
-						'message' => esc_html__( 'Invalid operation.', 'wp-google-map-plugin' ),
-					),
-					400
-				);
-			}
-
-			$this->{$operation}( $value );
-
-			wp_die();
-		}
-
-		/**
 		 * Process slug and display view in the backend.
 		 */
 		function wpgmp_processor() {
 
-			$return = '';
+			if ( ! current_user_can( 'manage_options' ) ) {
+			    wp_die(
+			        esc_html__( 'You do not have permission to access this page.', 'wp-google-map-plugin' ),
+			        '',
+			        array( 'response' => 403 )
+			    );
+			}
+
+			$allowed_pages = array(
+		        'wpgmp_view_overview',
+		        'wpgmp_form_group_map',
+		        'wpgmp_manage_group_map',
+		        'wpgmp_form_location',
+		        'wpgmp_manage_location',
+		        'wpgmp_import_location',
+		        'wpgmp_form_map',
+		        'wpgmp_manage_map',
+		        'wpgmp_form_route',
+		        'wpgmp_manage_drawing',
+		        'wpgmp_manage_permissions',
+		        'wpgmp_manage_settings',
+		        'wpgmp_manage_tools',
+		        'wpgmp_manage_extentions',
+		        'wpgmp_form_integration',
+		    );
+
 			$page = ( isset( $_GET['page'] ) ) ? sanitize_text_field( wp_unslash( $_GET['page'] ) ) : 'wpgmp_view_overview';
+
+			if ( ! in_array( $page, $allowed_pages, true ) ) {
+		        wp_die(
+		            esc_html__( 'Invalid request.', 'wp-google-map-plugin' ),
+		            '',
+		            array( 'response' => 403 )
+		        );
+		    }
+
+		    $return = '';
+
 			$pageData      = explode( '_', $page );
-			$obj_type      = $pageData[2];
-			$obj_operation = $pageData[1];
 
 			if ( count( $pageData ) < 3 ) {	die( 'Cheating!' );	}
+
+			$obj_type      = $pageData[2];
+			$obj_operation = $pageData[1];
 
 			try {
 
@@ -1396,7 +1399,7 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			
 			if ( is_admin() )
 			$this->wpgmp_define( 'WPGMP_SLUG', 'wpgmp_view_overview' );
-			$this->wpgmp_define( 'WPGMP_VERSION', '4.9.7' );
+			$this->wpgmp_define( 'WPGMP_VERSION', '4.9.8' );
 			$this->wpgmp_define( 'WPGMP_FOLDER', basename( dirname( __FILE__ ) ) );
 			$this->wpgmp_define( 'WPGMP_DIR', plugin_dir_path( __FILE__ ) );
 			$this->wpgmp_define( 'WPGMP_ICONS_DIR', WPGMP_DIR . '/assets/images/icons/' );
