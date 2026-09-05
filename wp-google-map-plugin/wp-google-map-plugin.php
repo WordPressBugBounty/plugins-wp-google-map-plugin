@@ -7,7 +7,7 @@
  * Author URI: https://weplugins.com/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Version: 4.9.8
+ * Version: 4.9.9
  * Text Domain: wp-google-map-plugin
  * Domain Path: /lang
 */
@@ -1399,7 +1399,7 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			
 			if ( is_admin() )
 			$this->wpgmp_define( 'WPGMP_SLUG', 'wpgmp_view_overview' );
-			$this->wpgmp_define( 'WPGMP_VERSION', '4.9.8' );
+			$this->wpgmp_define( 'WPGMP_VERSION', '4.9.9' );
 			$this->wpgmp_define( 'WPGMP_FOLDER', basename( dirname( __FILE__ ) ) );
 			$this->wpgmp_define( 'WPGMP_DIR', plugin_dir_path( __FILE__ ) );
 			$this->wpgmp_define( 'WPGMP_ICONS_DIR', WPGMP_DIR . '/assets/images/icons/' );

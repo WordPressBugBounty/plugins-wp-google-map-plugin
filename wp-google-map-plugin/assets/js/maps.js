@@ -7842,6 +7842,11 @@ window.WpgmpBaseMaps = WpgmpBaseMaps;
         speed: "slow",
       });
 
+      if(map_obj.map_data.map_options.heat_map){
+        map_obj.display_heat_map();
+        
+      }
+
     }
 
     createIconElement(iconUrl, title = '', iconSize = [32, 32]) {
@@ -8180,6 +8185,44 @@ window.WpgmpBaseMaps = WpgmpBaseMaps;
         return new google.maps.Marker(markerOptions);
       }
     }    
+
+    display_heat_map(){
+      var map_obj = this;
+
+      if (!map_obj || !map_obj.places) {
+          return;
+      }
+
+      map_obj.heatmapData = [];
+
+      map_obj.places.forEach(function(place) {
+
+          if (
+              place.location &&
+              place.location.lat &&
+              place.location.lng
+          ) {
+              map_obj.heatmapData.push(
+                  new google.maps.LatLng(
+                      parseFloat(place.location.lat),
+                      parseFloat(place.location.lng)
+                  )
+              );
+          }
+
+      });
+      var heat_map_radius = parseInt(map_obj.map_data.map_options.heat_map_radius, 10) || 20;
+      var heat_map_opacity = parseFloat(map_obj.map_data.map_options.heat_map_opacity);
+
+      heat_map_opacity = isNaN(heat_map_opacity) ? 0.6 : heat_map_opacity;
+
+      map_obj.heatmap = new google.maps.visualization.HeatmapLayer({
+          data: map_obj.heatmapData,
+          map: map_obj.map,
+          radius: heat_map_radius,
+          opacity: heat_map_opacity
+      });
+    }
 
     enable_drawing() {
       var map_obj = this;

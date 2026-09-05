@@ -189,6 +189,10 @@ if ( ! isset( $map->map_all_control['show_center_circle'] ) ) {
 	$map->map_all_control['show_center_circle'] = false;
 }
 
+if ( ! isset( $map->map_all_control['heat_map'] ) ) {
+	$map->map_all_control['heat_map'] = false;
+}
+
 if ( ! isset( $map->map_all_control['show_center_marker'] ) ) {
 	$map->map_all_control['show_center_marker'] = false;
 }
@@ -441,7 +445,10 @@ $map_data['map_options'] = array(
 	'map_tile_url'				     => $map_tile_url,
 	'openstreet_styles'				 => $openstreet_styles,
 	'openstreet_styles_markup'	     => $openstreet_styles_markup,
-	'map_box_styles_markup'	         => $map_box_styles_markup
+	'map_box_styles_markup'	         => $map_box_styles_markup,
+	'heat_map'              => ( 'true' == sanitize_text_field( $map->map_all_control['heat_map'] ) ),
+	'heat_map_radius'        => isset($map->map_all_control['heat_map_radius']) ? $map->map_all_control['heat_map_radius'] : 30,
+	'heat_map_opacity'        => isset($map->map_all_control['heat_map_opacity']) ? $map->map_all_control['heat_map_opacity'] : 0.6,
 );
 
 $map_data['map_options']['bound_map_after_filter'] = ( 'true' == $map->map_all_control['bound_map_after_filter'] );

@@ -436,6 +436,61 @@ $form->add_element(
 );
 
 $form->add_element(
+	'group', 'map_heat', array(
+		'value'  => esc_html__( 'Heat Map', 'wp-google-map-plugin' ),
+		'before' => '<div class="fc-12">',
+		'after'  => '</div>',
+	)
+);
+
+$form->add_element(
+	'checkbox', 'map_all_control[heat_map]', array(
+		'label'   => esc_html__( 'Enable Heat Map', 'wp-google-map-plugin' ),
+		'value'   => 'true',
+		'current' => isset( $data['map_all_control']['heat_map'] ) ? $data['map_all_control']['heat_map'] : '',
+		'desc'    => esc_html__( 'Check to display heat map.', 'wp-google-map-plugin' ),
+		'class'   => 'chkbox_class switch_onoff',
+		'data'    => array( 'target' => '.wpgmp_display_heat_map' ),
+	)
+);
+
+$form->add_element(
+	'text', 'map_all_control[heat_map_radius]', array(
+		'label'       => esc_html__( 'Radius', 'wp-google-map-plugin' ),
+		'value'       => ( isset( $data['map_all_control']['heat_map_radius'] ) and ! empty( $data['map_all_control']['heat_map_radius'] ) ) ? $data['map_all_control']['heat_map_radius'] : 20,
+		'desc'        => esc_html__( 'Enter here heat map radius 5 to 100', 'wp-google-map-plugin' ),
+		'class'       => 'form-control wpgmp_display_heat_map',
+		'placeholder' => esc_html__( 'Enter Heat Map Radius', 'wp-google-map-plugin' ),
+		'show'        => 'false',
+	)
+);
+
+$heat_opacity = array(
+	'1'   => '1',
+	'0.9' => '0.9',
+	'0.8' => '0.8',
+	'0.7' => '0.7',
+	'0.6' => '0.6',
+	'0.5' => '0.5',
+	'0.4' => '0.4',
+	'0.3' => '0.3',
+	'0.2' => '0.2',
+	'0.1' => '0.1',
+);
+
+$form->add_element(
+	'select', 'map_all_control[heat_map_opacity]', array(
+		'label'   => esc_html__( 'Opacity', 'wp-google-map-plugin' ),
+		'current' => isset( $data['map_all_control']['heat_map_opacity'] ) ? $data['map_all_control']['heat_map_opacity'] : '',
+		'desc'    => esc_html__( 'Choose Heat Map opacity.', 'wp-google-map-plugin' ),
+		'options' => $heat_opacity,
+		'class'   => 'form-control wpgmp_display_heat_map',
+		'show'        => 'false',
+		'default_value' => '0.6',
+	)
+);
+
+$form->add_element(
 	'group', 'map_filter_position', array(
 		'value'  => esc_html__( 'Map Filter Settings', 'wp-google-map-plugin' ),
 		'before' => '<div class="fc-12">',

@@ -218,6 +218,10 @@ if ( ! class_exists( 'WPGMP_Model_Map' ) ) {
 				$this->errors[] = esc_html__( 'Please enter a numeric value for circle\'s radius under the Map\'s Center > Display Circle section.', 'wp-google-map-plugin' );
 			}
 
+			if(isset($_POST['map_all_control']['heat_map_radius']) && !empty($_POST['map_all_control']['heat_map_radius']) && !is_numeric($_POST['map_all_control']['heat_map_radius'])){
+				$this->errors[] = esc_html__( 'Please enter a numeric value for heat map radius under the Heat Map > Radius.', 'wp-google-map-plugin' );
+			}
+
 
 			if(isset($_POST['map_overlay_setting']['overlay_width']) && !empty($_POST['map_overlay_setting']['overlay_width']) && !is_numeric($_POST['map_overlay_setting']['overlay_width'])){
 				$this->errors[] = esc_html__( 'Please enter the overlay width in numeric pixel value only the under Overlay Settings section.', 'wp-google-map-plugin' );

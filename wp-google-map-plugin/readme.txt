@@ -7,7 +7,7 @@ Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 3.4
 Tested up to: 7.0
-Stable tag: 4.9.8
+Stable tag: 4.9.9
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -254,6 +254,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 == Changelog ==
 
+= 4.9.9 =
+* New: Added Heatmap functionality to visualize the density of locations on the map.
+
 = 4.9.8 =
 * Security: Removed the unused check_products_updates AJAX action.
 * Security: Improved validation of request-supplied values used by AJAX handlers.
@@ -379,6 +382,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 
 == Upgrade Notice ==
+
+= 4.9.9 =
+– Upgrade for new features and more stable release
 
 = 4.9.8 =
 – Upgrade for new features and more stable release

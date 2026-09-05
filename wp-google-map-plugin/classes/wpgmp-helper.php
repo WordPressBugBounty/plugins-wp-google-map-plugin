@@ -49,9 +49,9 @@ class WPGMP_Helper{
 
 		
 			if ( isset( $wpgmp_settings['wpgmp_auto_fix'] ) && $wpgmp_settings['wpgmp_auto_fix'] === 'true' ) {
-				$google_api = 'https://maps.google.com/maps/api/js?v=3.64&libraries=marker,geometry,places,drawing&callback=wpgmpInitMap&language=' . $language;
+				$google_api = 'https://maps.google.com/maps/api/js?v=3.64&libraries=marker,geometry,places,drawing,visualization&callback=wpgmpInitMap&language=' . $language;
 			} else {
-				$google_api = 'https://maps.google.com/maps/api/js?loading=async&v=3.64&libraries=marker,geometry,places,drawing&callback=wpgmpInitMap&language=' . $language;
+				$google_api = 'https://maps.google.com/maps/api/js?loading=async&v=3.64&libraries=marker,geometry,places,drawing,visualization&callback=wpgmpInitMap&language=' . $language;
 			}
 		
 			if ( ! empty( $wpgmp_settings['wpgmp_api_key'] ) ) {
