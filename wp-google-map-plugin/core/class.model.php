@@ -228,12 +228,32 @@ if ( ! class_exists( 'FlipperCode_Model_Base' ) ) {
 							}
 						} else {
 
-							$value = $this->is_column( $fcv_array[ $i ][2] ) ? '`' . trim( $fcv_array[ $i ][2], '`' ) . '`' : "'" . $this->escape( $fcv_array[ $i ][2] ) . "'";
 							if ( 'in' == strtolower( $fcv_array[ $i ][1] ) ) {
-								$value = str_replace( "'", '', $value );
-								$value = '(' . $value . ')';
-							}
-							 $this->query .= '`' . $fcv_array[ $i ][0] . '` ' . $fcv_array[ $i ][1] . ' ' . $value;
+						        // Build IN(...) by escaping and quoting each element separately.
+						        // Never escape a joined string and then strip quotes — that undoes
+						        // the escaping entirely and allows SQL grammar to be injected.
+						        $raw_value = $fcv_array[ $i ][2];
+						        $items     = is_array( $raw_value ) ? $raw_value : explode( ',', (string) $raw_value );
+
+						        $escaped_items = array();
+						        foreach ( $items as $item ) {
+						            $item = trim( $item );
+						            if ( '' === $item ) {
+						                continue;
+						            }
+						            $escaped_items[] = "'" . $this->escape( $item ) . "'";
+						        }
+
+						        // An empty/invalid list must never produce IN() (invalid SQL) or,
+						        // worse, an always-true/always-false condition an attacker can steer.
+						        $value = ! empty( $escaped_items ) ? '(' . implode( ',', $escaped_items ) . ')' : '(NULL)';
+
+						        $this->query .= '`' . $fcv_array[ $i ][0] . '` ' . $fcv_array[ $i ][1] . ' ' . $value;
+						    } else {
+
+						        $value = $this->is_column( $fcv_array[ $i ][2] ) ? '`' . trim( $fcv_array[ $i ][2], '`' ) . '`' : "'" . $this->escape( $fcv_array[ $i ][2] ) . "'";
+						        $this->query .= '`' . $fcv_array[ $i ][0] . '` ' . $fcv_array[ $i ][1] . ' ' . $value;
+						    }
 						}
 					}
 				}

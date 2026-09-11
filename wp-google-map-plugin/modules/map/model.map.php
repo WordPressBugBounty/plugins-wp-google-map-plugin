@@ -277,7 +277,14 @@ if ( ! class_exists( 'WPGMP_Model_Map' ) ) {
 			} elseif ( is_array( $_POST['map_locations'] ) and ! empty( $_POST['map_locations'] ) ) {
 				$map_locations = $_POST['map_locations'];
 			} else {
-				$map_locations = array(); }
+				$map_locations = array(); 
+			}
+
+			// Security: map_locations must be a list of numeric location IDs.
+			// Never store raw/arbitrary strings here — they later flow, unquoted,
+			// into a shared IN(...) SQL builder used by the public map shortcode.
+			$map_locations = array_map( 'absint', (array) $map_locations );
+			$map_locations = array_values( array_unique( array_filter( $map_locations ) ) );
 
 			if ( isset( $_POST['extensions_fields'] ) ) {
 				$_POST['map_all_control']['extensions_fields'] = $_POST['extensions_fields'];

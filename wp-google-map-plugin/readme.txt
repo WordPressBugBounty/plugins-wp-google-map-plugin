@@ -7,7 +7,7 @@ Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 3.4
 Tested up to: 7.0
-Stable tag: 4.9.9
+Stable tag: 5.0.0
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -254,6 +254,12 @@ Explore the plugin instantly using the WordPress Playground:
 
 == Changelog ==
 
+= 5.0.0 =
+* Added : Added an option to configure the CARTO API key when using CARTO as the map tile provider.
+* Security: Hardened saving of map location data to ensure only valid numeric location IDs are stored.
+* Security: Improved handling of IN() conditions in the internal query builder to properly escape each value individually.
+* Fixed: Potential SQL injection via map location data in specific configurations.
+
 = 4.9.9 =
 * New: Added Heatmap functionality to visualize the density of locations on the map.
 
@@ -382,6 +388,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 
 == Upgrade Notice ==
+
+= 5.0.0 =
+– Upgrade for new features and more stable release
 
 = 4.9.9 =
 – Upgrade for new features and more stable release

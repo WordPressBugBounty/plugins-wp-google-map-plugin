@@ -134,6 +134,7 @@ class WPGMP_Helper{
 		
 			// Access keys for external services
 			'wpgmp_mapbox_key'            => $wpgmp_settings['wpgmp_mapbox_key'] ?? '',
+			'wpgmp_cartodb_key'            => $wpgmp_settings['wpgmp_cartodb_key'] ?? '',
 			// Access keys for external services
 			'map_provider'            => WPGMP_Helper::wpgmp_get_map_provider(),
 			'route_provider'      => WPGMP_Helper::wpgmp_get_route_provider(),

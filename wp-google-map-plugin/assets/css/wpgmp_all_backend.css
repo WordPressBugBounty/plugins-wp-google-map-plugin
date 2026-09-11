@@ -6531,7 +6531,7 @@ table.dataTable thead .dt-ordering-desc-disabled .dt-column-order {
 .wp-list-table tfoot .check-column,
 .wp-list-table thead .check-column {
   padding: var(--fc-table-padding-y) var(--fc-table-padding-x)
-    var(--fc-table-padding-y) calc(var(--fc-table-padding-x) * 1.5) !important;
+    var(--fc-table-padding-y) calc(var(--fc-table-padding-x) * 1.5);
   width: 60px;
 }
 

@@ -233,6 +233,20 @@ $wpgmp_form->add_element(
 		)
 	);
 
+	$wpgmp_form->add_element(
+		'text', 'wpgmp_cartodb_key', array(
+			'label'  => esc_html__( 'CartoDB API Key', 'wp-google-map-plugin' ),
+			'value'  => isset($wpgmp_settings['wpgmp_cartodb_key']) ? $wpgmp_settings['wpgmp_cartodb_key'] : "",
+			'before' => '<div class="fc-4">',
+			'after'  => '</div>',
+			'class'   => 'form-control wpgmp_map_type wpgmp_map_type_openstreet',
+			'desc' => sprintf( 
+				/* translators: %s: Access token link. */
+				esc_html__( 'Create a %s API key and paste in above textbox.', 'wp-google-map-plugin' ), '<a target="_blank" href="https://carto.com/basemaps/apikey">'.esc_html__(' CartoDB ','wp-google-map-plugin').' </a>' ),
+			'show' => 'false',
+		)
+	);
+
 $guide_link = '<a href="https://www.wpmapspro.com/category/maps-error-codes/" target="_blank">'.esc_html__("guides.",'wp-google-map-plugin').'</a>'; 
 
 $wpgmp_form->add_element(

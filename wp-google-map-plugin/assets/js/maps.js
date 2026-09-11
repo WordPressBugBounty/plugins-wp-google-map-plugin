@@ -618,7 +618,7 @@
 			}
 		},
 		CartoDB: {
-			url: 'https://{s}.basemaps.cartocdn.com/{variant}/{z}/{x}/{y}{r}.png',
+			url: 'https://{s}.basemaps.cartocdn.com/{variant}/{z}/{x}/{y}{r}.png?key={apiKey}',
 			options: {
 				attribution: '{attribution.OpenStreetMap} &copy; <a href="https://carto.com/attributions">CARTO</a>',
 				subdomains: 'abcd',
@@ -10282,6 +10282,12 @@ map_loaded() {
             });
 
             map_obj.bingmaplayers["CanvasGray"].addTo(map_obj.map);
+          }else if(provider.indexOf('CartoDB') !== -1 ){
+            map_obj.map = L.map(mapElement, options);
+            var cartodb_key = wpgmp_local.wpgmp_cartodb_key || '';
+            L.tileLayer
+                .provider(provider, { apiKey: cartodb_key })
+                .addTo(map_obj.map);
           }
           // Standard Leaflet Providers support nested "BasemapAT.grau", "CartoDB.Positron", etc.
           else {

@@ -87,7 +87,7 @@ if ( ! class_exists( 'WPGMP_Model_Settings' ) ) {
 				'wpgmp_countries'            => wp_unslash($_POST['wpgmp_countries'] ?? []),
 			];
 
-			foreach (['wpgmp_api_key','wpgmp_mapbox_key'] as $key) {
+			foreach (['wpgmp_api_key','wpgmp_mapbox_key','wpgmp_cartodb_key'] as $key) {
 				if (!empty($_POST[$key])) {
 					$settings[$key] = sanitize_text_field(wp_unslash($_POST[$key]));
 				}
