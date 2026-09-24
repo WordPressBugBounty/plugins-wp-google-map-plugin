@@ -145,7 +145,8 @@ class WPGMP_Helper{
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only debug flag, no state change.
 				(isset($_GET['wpgmp_debug']) && $_GET['wpgmp_debug'] === 'true') ||
 				(isset($wpgmp_settings['wpgmp_debug_mode']) && $wpgmp_settings['wpgmp_debug_mode'] === 'true')
-			)
+			),
+			'is_admin'    => current_user_can('manage_options'), 
 		];
 		
 		// Merge additional localized values from external method (like zoom labels, messages, etc.)
@@ -477,7 +478,7 @@ Enjoy the aroma of freshly roasted beans all day long.';
 		if(isset($wpgmp_settings['wpgmp_tiles_source']) ){
 			return $wpgmp_settings['wpgmp_tiles_source'];
 		} else{
-			return 'openstreet';
+			return 'Leaflet.OpenFreeMap';
 		}
 	}
 

@@ -32,15 +32,16 @@ $wpgmp_form->add_element(
 			'google'     => esc_html__( 'Google Maps', 'wp-google-map-plugin' ),
 			'openstreet' => esc_html__( 'OpenStreetMap', 'wp-google-map-plugin' ),
 		),
-		'current'         => isset($wpgmp_settings['wpgmp_map_source']) ? $wpgmp_settings['wpgmp_map_source'] : "google",
+		'current'         => isset($wpgmp_settings['wpgmp_map_source']) ? $wpgmp_settings['wpgmp_map_source'] : "openstreet",
 		'class'           => 'chkbox_class switch_onoff',
 		'data'  		  => array( 'target' => '.wpgmp_map_type' ),
 		'desc' => esc_html__('Select the map provider you want to use for rendering your maps.','wp-google-map-plugin'),
-		'default_value'   => 'google',
+		'default_value'   => 'openstreet',
 	)
 );
 
 $tiles_providers = array(
+	'Leaflet.OpenFreeMap'       => esc_html__( 'Leaflet OpenFreeMap', 'wp-google-map-plugin' ),
 	'OpenStreetMap.Mapnik'       => esc_html__( 'OpenStreetMap Mapnik', 'wp-google-map-plugin' ),
 	'Stamen.Toner'               => esc_html__( 'Stamen Toner', 'wp-google-map-plugin' ),
 	'Stamen.Terrain'             => esc_html__( 'Stamen Terrain', 'wp-google-map-plugin' ),
@@ -48,12 +49,13 @@ $tiles_providers = array(
 	'CartoDB.DarkMatter'         => esc_html__( 'CartoDB Dark Matter', 'wp-google-map-plugin' ),
 	'Esri.WorldImagery'          => esc_html__( 'Esri World Imagery', 'wp-google-map-plugin' ),
 	'MapBox'          => esc_html__( 'MapBox', 'wp-google-map-plugin' ),
+
 );
 
 $wpgmp_form->add_element(
 	'select', 'wpgmp_tiles_source', array(
 		'label'   => esc_html__( 'Tiles Provider', 'wp-google-map-plugin' ),
-		'current' => isset($wpgmp_settings['wpgmp_tiles_source']) ? $wpgmp_settings['wpgmp_tiles_source'] : 'OpenStreetMap.Mapnik',
+		'current' => isset($wpgmp_settings['wpgmp_tiles_source']) ? $wpgmp_settings['wpgmp_tiles_source'] : 'Leaflet.OpenFreeMap',
 		'desc'    => esc_html__( 'Choose your tiles provider.', 'wp-google-map-plugin' ),
 		'options' => $tiles_providers,
 		'before'  => '<div class="fc-6">',

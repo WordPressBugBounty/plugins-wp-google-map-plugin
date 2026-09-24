@@ -2,12 +2,12 @@
 /*
  * Plugin Name: WP Maps
  * Plugin URI: https://weplugins.com/
- * Description: A fully customizable WordPress Plugin for Google Maps. Create unlimited Google Maps Shortcodes, assign unlimited locations with custom infowindow messages and add to pages, posts and widgets.
+ * Description: A feature-rich WordPress map plugin for Google Maps, OpenStreetMap and Mapbox. Create custom maps with multiple locations, markers, searchable listings, filters and InfoWindows, and display them using shortcodes, widgets or page builders.
  * Author: WePlugins
  * Author URI: https://weplugins.com/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Version: 5.0.0
+ * Version: 5.0.1
  * Text Domain: wp-google-map-plugin
  * Domain Path: /lang
 */
@@ -48,6 +48,7 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 		public function __construct() {
 
 			$this->wpagm_check_plugin_dependancy();
+			
 
 			if( $this->proVersionInstalled === false)
 			{
@@ -813,6 +814,15 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 				$this->wpgmp_activation();
 			}
 
+			if ( false === get_option( 'wpgmp_first_activation_time', false ) ) {
+		        add_option(
+		            'wpgmp_first_activation_time',
+		            time(),
+		            '',
+		            false
+		        );
+		    }
+
 			if (class_exists('WePlugins_Notification')) {
 				WePlugins_Notification::schedule_cron();
 			}
@@ -1281,12 +1291,14 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 				$wpgmp_settings['wpgmp_allow_meta']    = get_option( 'wpgmp_allow_meta', true );
 				$wpgmp_settings['wpgmp_scripts_minify']    = get_option( 'wpgmp_scripts_minify', true );
 				$wpgmp_settings['wpgmp_version']    = get_option( 'wpgmp_version', WPGMP_VERSION );
+				$wpgmp_settings['wpgmp_map_source']    = 'openstreet';
 				
 				update_option( 'wpgmp_settings', $wpgmp_settings );
 			}else if(! get_option( 'wpgmp_settings' ) && ! get_option( 'wpgmp_language' )){
 				$wpgmp_settings['wpgmp_language']     = 'en';
 				$wpgmp_settings['wpgmp_api_key']      = '';
 				$wpgmp_settings['wpgmp_version']      = WPGMP_VERSION;
+				$wpgmp_settings['wpgmp_map_source']    = 'openstreet';
 				
 				update_option( 'wpgmp_settings', $wpgmp_settings );
 			}
@@ -1399,7 +1411,7 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			
 			if ( is_admin() )
 			$this->wpgmp_define( 'WPGMP_SLUG', 'wpgmp_view_overview' );
-			$this->wpgmp_define( 'WPGMP_VERSION', '5.0.0' );
+			$this->wpgmp_define( 'WPGMP_VERSION', '5.0.1' );
 			$this->wpgmp_define( 'WPGMP_FOLDER', basename( dirname( __FILE__ ) ) );
 			$this->wpgmp_define( 'WPGMP_DIR', plugin_dir_path( __FILE__ ) );
 			$this->wpgmp_define( 'WPGMP_ICONS_DIR', WPGMP_DIR . '/assets/images/icons/' );
@@ -1446,7 +1458,8 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 				'wpgmp-map-widget.php',
 				'wpgmp-check-cookies.php',
 				'wpgmp-temp-access.php',
-				'wpgmp-feedback-form.php'
+				'wpgmp-feedback-form.php',
+				'wpgmp-review-notice.php'
 			);
 		
 			foreach ( $plugin_files_to_include as $file ) {

@@ -326,6 +326,7 @@ if ( wp_is_mobile() ) {
 }
 
 $openstreet_styles = array(
+	'Leaflet.OpenFreeMap'=>'https://tiles.openfreemap.org/styles/liberty',
 	'OpenStreetMap.Mapnik'=>'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 	'OpenStreetMap.DE'=>'https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',
 	'OpenStreetMap.CH'=>'https://tile.osm.ch/switzerland/{z}/{x}/{y}.png',
@@ -463,6 +464,7 @@ $map_data['map_options']['height'] = sanitize_text_field( $map->map_height );
 
 // Special Values Replacement for leaflet maps.
 $position_replacements = array(
+	'TOP_CENTER'     => 'topleft',
 	'TOP_LEFT'     => 'topleft',
 	'TOP_RIGHT'    => 'topright',
 	'BOTTOM_LEFT'  => 'bottomleft',
@@ -1645,6 +1647,45 @@ $css_rules[] = ".fc-infobox-root { --fc-infobox-max-width: ".$infowindow_width_p
 if( !isset( $secondary_color ) ) {
 	$secondary_color = '';
 }
+
+if ( isset( $map->map_all_control['control_transparent'] ) && $map->map_all_control['control_transparent'] ) {
+	$css_rules[] = '.wpgmp_map .gm-style button.gm-control-active, .wpgmp_map .gm-style .gm-svpc, .wpgmp_map .gmnoprint button, .wpgmp_map .wpgmp_locateme_control{
+ 	background: rgba(255, 255, 255, 0.3) !important; 
+ 	backdrop-filter: blur(20px);
+ 	border-radius: 8px !important;
+ 	box-shadow: rgb(0 0 0 / 30%) 0px 1px 4px -1px;
+}
+.wpgmp_map .leaflet-control-container .leaflet-bar a{
+	background-color: rgba(255, 255, 255, 0.3) !important;
+	box-shadow: rgb(0 0 0 / 30%) 0px 1px 4px -1px;
+	backdrop-filter: blur(20px);
+}
+
+.wpgmp_map .leaflet-control-container select.wpomp_map_type, .wpgmp_map .leaflet-control-container .leaflet-control-scale .leaflet-control-scale-line{
+	background: rgba(255, 255, 255, 0.3) !important; 
+ 	backdrop-filter: blur(20px);
+ 	box-shadow: rgb(0 0 0 / 30%) 0px 1px 4px -1px;
+}
+
+.wpgmp_locateme_control span::before{
+ 	background: none !important; 
+}
+
+.wpgmp_map .gmnoprint button.gm-control-active, .wpgmp_map .gmnoprint.gm-bundled-control .gmnoprint{ 
+	backdrop-filter: none; 
+	backdrop-filter: blur(20px);
+	background: transparent !important; 
+	box-shadow: rgb(0 0 0 / 30%) 0px 1px 4px -1px;
+}
+.wpgmp_map .gmnoprint .gmnoprint div {
+	backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
+    box-shadow: rgb(0 0 0 / 30%) 0px 1px 4px -1px;
+}';
+}
+
+
 
 
 if ( ! empty( $css_rules ) ) {

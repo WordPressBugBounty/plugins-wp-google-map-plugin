@@ -102,6 +102,7 @@ $form->add_element(
 		'current' => isset( $data['map_all_control']['search_control'] ) ? $data['map_all_control']['search_control'] : '',
 		'desc'    => esc_html__( 'Please check to enable search box control.', 'wp-google-map-plugin' ),
 		'class'   => 'chkbox_class',
+		'pro' => true
 	)
 );
 
@@ -112,6 +113,17 @@ $form->add_element(
 		'id'      => 'search_control',
 		'current' => isset( $data['map_all_control']['locateme_control'] ) ? $data['map_all_control']['locateme_control'] : '',
 		'desc'    => esc_html__( 'Please check to enable locate me control.', 'wp-google-map-plugin' ),
+		'class'   => 'chkbox_class',
+	)
+);
+
+$form->add_element(
+	'checkbox', 'map_all_control[control_transparent]', array(
+		'label'   => esc_html__( 'Turn On Transparent Controls', 'wp-google-map-plugin' ),
+		'value'   => 'true',
+		'id'      => 'search_control',
+		'current' => isset( $data['map_all_control']['control_transparent'] ) ? $data['map_all_control']['control_transparent'] : '',
+		'desc'    => esc_html__( 'Please check to enable make all control transparent.', 'wp-google-map-plugin' ),
 		'class'   => 'chkbox_class',
 	)
 );

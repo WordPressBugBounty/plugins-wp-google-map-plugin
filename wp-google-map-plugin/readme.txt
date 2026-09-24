@@ -1,24 +1,23 @@
-
-=== WP Maps - Google Maps,OpenStreetMap,Mapbox,Store Locator,Listing,Directory & Filters ===
+=== WP Maps – Google Maps, OpenStreetMap, Mapbox, Store Locator with Search, Filters & Listings ===
 Contributors:      flippercode
 Plugin Name:       WP MAPS
-Tags: google maps, map plugin, wp google map, store locator, openstreetmap
+Tags: google maps, map, maps, store locator, openstreetmap
 Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
-Requires at least: 3.4
-Tested up to: 7.0
-Stable tag: 5.0.0
-Requires PHP: 5.3
+Requires at least: 6.0
+Requires PHP: 7.0
+Tested up to: 7.1.2
+Stable tag: 5.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-WordPress map plugin for Google Maps, OpenStreetMap & Mapbox with store locator, filterable listings & custom markers.
+WordPress map plugin for Google Maps, OpenStreetMap & Mapbox with custom markers, filters, searchable listings and store locator.
 
 == Description ==
 
-**Build stunning, interactive maps with listing in minutes — no coding required.**
+WP Maps is a feature-rich free WordPress map plugin for Google Maps, OpenStreetMap, and Mapbox, with advanced features like search, filters, paginated listings, sorting, marker categories, custom marker icons, and marker clustering **included in the free version**.
 
-**WP Maps** is a powerful yet easy-to-use WordPress map plugin that supports both Google Maps and OpenStreetMap. Create fully customized maps in just a few clicks with custom markers, searchable listings, and smart filters. Whether you’re building a store locator, showcasing locations, or simply adding a map to your contact page — this plugin makes it effortless.
+Create interactive maps for store locators, business directories, service areas, contact pages, and location listings without paying for essential mapping features. Organize locations into categories with their own marker icons, help visitors find locations using search and filters, and display results with sorting, pagination, and marker clustering. Whether you need a simple location map or a full-featured directory, WP Maps gives you a wide range of features to build with for free.
 
 Perfect for:
 
@@ -26,18 +25,17 @@ Perfect for:
 * Store locators
 * Service area maps
 * Contact pages 
-* Any map-based project you can think of.
-
-**Easily create simple or advanced maps tailored to your needs, fully customizable to match your website’s branding.**
+* Map and listing based WordPress projects.
 
 == Features ==
 
 **Free Version**
 
-* **Easily create interactive Google Maps with custom markers, smart search, filters, and paginated listings.**
-* Use Google Maps, OpenStreetMap, or Mapbox as your map provider, with easy switching between them.
-* Create multiple maps with different locations and listing.
+* Create complete maps with custom markers, search, filters, and paginated listings — **all included in the free version.**
+* Choose Google Maps, OpenStreetMap, or Mapbox as your map provider, with easy switching between them.
+* Create multiple maps with multiple locations and listings.
 * Enable sorting and pagination for listings.
+* Get a directions link for every listing record, linking out to the official Google Maps website.
 * Enable marker clustering from the backend to group markers on the map.
 * Automatically update the map center based on filtered markers.
 * Display maps easily using shortcodes.
@@ -73,7 +71,7 @@ Perfect for:
 * Add custom styling.
 * Works with all major page builders and themes.
 * Fully documented with step by step and easy to understand instructions.
-* Cross-browser compatible — tested on IE8+, Chrome, Firefox, and Safari.
+* Cross-browser compatible — tested with all major browsers including Chrome, Firefox, and Safari.
 
 
 **Pro Version** <strong>[WP MAPS PRO Version](https://www.wpmapspro.com?utm_source=wordpress&utm_medium=liteversion&utm_campaign=freemium&utm_id=freemium)</strong>.
@@ -101,6 +99,7 @@ Perfect for:
 * Advanced feature: Integrate with Microsoft Clarity, Google Analytics 4, Meta Pixel, and Zapier to track marker click events.
 * Access 25+ additional add-ons available with the Pro version, offering extended functionality.
 * Use SVGs as marker icons — choose from pre-built options or upload your own.
+* Automatic Geocoding — Automatically fetches latitude and longitude for any location that Google recognizes.
 * Automatically center the map based on assigned locations.
 * Show nearby amenities like ATMs, banks, and stores to provide useful local context.
 * Draggable markers and option to open infowindows by default on page load.
@@ -123,14 +122,15 @@ Perfect for:
 
 == Important Links ==
 
+* [Create Google Maps API Key](https://www.youtube.com/watch?v=oXVV9gcFDxA&t=2s)
 * [Tutorials](https://www.wpmapspro.com/tutorials/)
 * [Hooks & Filters](https://www.wpmapspro.com/map-hooks/)
 * [Support](https://weplugins.com/support/)
 * [Custom Development Available](https://weplugins.com/contact/)
 
-### 🏬 Use Cases – Map Solutions for Every Business
+== Use Cases – Map Solutions for Every Business ==
 
-WP Maps helps you build advanced location maps for any industry. From store locators to real estate maps, here are popular use cases powered by Google Maps or Leaflet:
+WP Maps helps you build advanced maps with listings for any industry. From store locators to real estate maps, here are popular use cases where you can use our plugin :
 
 * 🛍️ Retail Store Locator – Showcase nearby outlets, branches, or chain locations  
 * 🍽️ Restaurant Locator – Help users find your cafes, diners, or food franchises  
@@ -191,33 +191,58 @@ WP Maps helps you build advanced location maps for any industry. From store loca
 2. Create a map from **Add Map** and assign locations
 3. Use the shortcode (from **Manage Maps**) in posts, pages, or widgets
 
-*Note: Google Maps requires an API key. OpenStreetMap works without a key.*
+*Note: Google Maps requires an API key. OpenStreetMap and Mapbox works without a key.*
 
 == Frequently Asked Questions ==
 
-= Is this plugin GDPR-compliant? =
-Yes, WP Maps is fully GDPR-compliant for both Google Maps and OpenStreetMap integrations.
+= What can I use WP Maps for? =
+WP Maps can be used to create store locators, business directories, real estate maps, service area maps, location listings, and other interactive WordPress maps.
 
-= Do I need a Google Maps API key? =
-Only for Google Maps. OpenStreetMap requires no API key.
+= How do I get started with WP Maps? =
+Install and activate WP Maps, then go to the WP Maps menu in your WordPress admin panel. For the quickest setup, go to WP Maps > Tools and click Create Sample Data to create a demo map. You can also create a map manually by adding marker categories, locations, and assigning those locations to a map. If you want to create a Google Map, add your Google Maps API key first by provided instructions.
+
+= Do I need a Google Maps API key to use WP Maps? =
+Only if you choose Google Maps as your map provider. OpenStreetMap does not require a any API key. You can select your preferred map provider from the WP Maps settings.
+
+= How do I display a map once it's created? =
+Each map you create has a unique shortcode that you can use to display it in WordPress posts, pages, widgets, and any other area that supports shortcodes. Just copy the shortcode and paste it wherever you want the map to appear.
+
+= Is there a free WordPress map plugin with search, filters, listings and marker clustering? =
+Yes. Unlike many map plugins that put search, filters, listings, and marker clustering behind a paid plan, WP Maps includes searchable listings, smart filters, sortable and paginated listings, and marker clustering in the free version.
+
+= Can I display my existing WordPress data saved in a post or page or custom post type on maps instantly? =
+Not in the free version — this requires Pro. The Pro version supports advanced features such as displaying existing WordPress data on maps using custom fields or Advanced Custom Fields (ACF), creating multiple custom filters based on custom field values, filtering custom post types using custom taxonomies, radius search, route directions, and more.
+
+= Can I use different layouts and templates for the InfoWindow and listings in the free version? =
+You can customize the listing and InfoWindow to a limited extent in the free version. The Pro version offers multiple layouts and templates for both, including grid view, list view, and more.
+
+= Which map provider should I choose — Google Maps, OpenStreetMap or Mapbox? =
+Google Maps is a good choice if you want a feature-rich mapping experience, including Google's map styling and Street View. Google Maps Platform also offers free monthly usage thresholds for eligible services, although API key and billing setup are required. It is easy to set up, you just need to create an API key for your website. OpenStreetMap and Mapbox are good alternatives if you prefer other map providers. You can change the provider anytime from WP Maps settings without losing your saved locations or markers.
+
+= How many maps and locations can I create? =
+You can create multiple maps and locations and assign different locations to different maps. This makes it easy to organize locations for different businesses, stores, directories, and other types of content.
 
 = Can I use my own marker icons? =
-Yes, upload PNG or SVG icons or choose from 100+ pre-designed icons.
+Yes. You can upload your own PNG or SVG marker icons, or choose from more than 100 pre-designed marker icons included with WP Maps.
 
-= How many locations can I add? =
-You can add unlimited locations.
+= Can I display different marker icons or pins on a map? =
+Yes. WP Maps lets you create marker categories and assign a different marker icon to each category. You can then assign these categories to your locations, allowing each location to be displayed on the map with the appropriate marker icon.
 
-= Can I display maps with shortcodes? =
-Yes, each map has a unique shortcode you can place anywhere.
+= Is this plugin GDPR-compliant? =
+Yes. WP Maps doesn't collect or store any visitor data itself, so there's nothing to share or process in the first place. The plugin only makes the API requests needed to render the map tiles from your chosen provider (Google Maps, OpenStreetMap, or Mapbox) — no tracking, no cookies, no personal data handling on our end.
 
-= Is there widget support? =
-Yes, you can show maps in sidebars using the widget.
+= Is there a Gutenberg block, widget, and page builder support? =
+Our plugin provides a shortcode which can be added to any page using the Gutenberg editor or any popular page builder like Elementor or Divi that supports shortcode.
+ 
+ = Is the plugin compatible with caching plugins? =
+Yes. WP Maps is designed to work with standard WordPress caching plugins. If a map does not load after enabling JavaScript minification, combination, or deferral, try excluding WP Maps scripts from those optimizations.
 
 = Do you offer documentation and tutorials? =
-Yes! Visit [WP Maps Tutorials](https://www.wpmapspro.com/tutorials/).
+Yes. Visit [WP Maps Tutorials](https://www.wpmapspro.com/tutorials/) for documentation, guides, and tutorials.
 
-= What if I need help or support? =
-Contact us at [Support](https://weplugins.com/support/).
+= How can I get support for WP Maps? =
+You can get support by creating a support ticket through our support system. Our support team can help with questions, configuration, and troubleshooting. Visit [WP Maps Support](https://weplugins.com/support/) to create a support ticket.
+
 
 == Try It Now ==
 
@@ -254,11 +279,16 @@ Explore the plugin instantly using the WordPress Playground:
 
 == Changelog ==
 
+= 5.0.1 =
+* New: Added OpenFreeMap tile provider support for OpenStreetMap.
+* New: Added transparent styling for map controls.
+* New: Added admin popup notifications for API errors, making it easier to identify issues such as invalid or restricted API keys.
+
 = 5.0.0 =
-* Added : Added an option to configure the CARTO API key when using CARTO as the map tile provider.
-* Security: Hardened saving of map location data to ensure only valid numeric location IDs are stored.
-* Security: Improved handling of IN() conditions in the internal query builder to properly escape each value individually.
-* Fixed: Potential SQL injection via map location data in specific configurations.
+* New: Added an option to configure the CARTO API key when using CARTO as the map tile provider.
+* Security: Hardened map location data handling to ensure that only valid numeric location IDs are stored.
+* Security: Improved handling of IN() conditions in the internal query builder by properly escaping each value individually.
+* Fixed: Addressed a potential SQL injection vulnerability involving map location data in specific configurations.
 
 = 4.9.9 =
 * New: Added Heatmap functionality to visualize the density of locations on the map.
@@ -268,7 +298,6 @@ Explore the plugin instantly using the WordPress Playground:
 * Security: Improved validation of request-supplied values used by AJAX handlers.
 * Security: Fixed a Local File Inclusion vulnerability
 * Security: Restricted dynamic AJAX method dispatching to an explicit allowlist to prevent unauthorized method execution and recursive invocation.
-
 
 = 4.9.7 =
 * Security: Added capability validation to the wpgmp_ajax_call AJAX endpoint to prevent unauthorized access.
@@ -327,14 +356,13 @@ Explore the plugin instantly using the WordPress Playground:
 * Add : Fixed the Undefined wpgmp_api_key error.
 
 = 4.8.2 =
-* Add : Fixed the Fatel error htmlspecialchars_decode().
+* Add : Fixed the Fatal error htmlspecialchars_decode().
 * Add : Fixed the search control error.
 
 = 4.8.1 =
 * Add : Fixed the png marker default size issue.
 * Add : Infowindow open on wrong area issue fixed.
 * Add : Search control autosuggest issue fixed.
-
 
 = 4.7.4 =
 * Add : Fixed the empty latitude and longitude vaildation error message.
@@ -389,156 +417,39 @@ Explore the plugin instantly using the WordPress Playground:
 
 == Upgrade Notice ==
 
+= 5.0.1 =
+– Please upgrade to version 5.0.1 for getting new features.
+
 = 5.0.0 =
-– Upgrade for new features and more stable release
+– Please upgrade to version 5.0.0 or above to get new features and security fixes.
 
 = 4.9.9 =
-– Upgrade for new features and more stable release
+– Please upgrade to version 4.9.9 or above to get new features and security fixes.
 
 = 4.9.8 =
-– Upgrade for new features and more stable release
+– Please upgrade to version 4.9.8 or above to get important security fixes.
 
 = 4.9.7 =
-– Upgrade for new features and more stable release
+– Please upgrade to version 4.9.7 or above to get important security fixes.
 
 = 4.9.6 =
-– Upgrade for new features and more stable release
+– Please upgrade to version 4.9.6 or above to get security fixes.
 
 = 4.9.5 =
-– Upgrade for new features and more stable release
+– Please upgrade to version 4.9.5 or above to get security fixes.
 
 = 4.9.4 =
-– Upgrade for new features and more stable release
+– Please upgrade to version 4.9.4 or above to get security fixes.
 
 = 4.9.3 =
-– Upgrade for new features and more stable release
+– Please upgrade to version 4.9.3 or above to get new features and security fixes.
 
 = 4.9.2 =
-– Upgrade for more stable release
+– Please upgrade to version 4.9.2 or above to get important security fixes.
 
 = 4.9.1 =
-– Upgrade for more stable release
+– Please upgrade to version 4.9.1 or above to get important security fixes.
 
 = 4.9.0 =
-– Upgrade for more stable release
+– Please upgrade to version 4.9.0 or above to get important security fixes.
 
-= 4.8.9 =
-– Upgrade for more stable release
-
-= 4.8.8 =
-– Upgrade for more stable release.
-
-= 4.8.7 =
-– Upgrade for more stable release.
-
-= 4.8.6 =
-– Upgrade for more stable release.
-
-= 4.8.5 =
-– Upgrade for more stable release.
-
-= 4.8.4 =
-– Upgrade for more stable release.
-
-= 4.8.3 =
-– Upgrade for more stable release.
-
-= 4.8.2 =
-– Upgrade for more stable release.
-
-= 4.8.1 =
-– Upgrade for more stable release.
-
-= 4.7.4 =
-– Upgrade for more stable release.
-
-= 4.7.3 =
-– Upgrade for more stable release.
-
-= 4.7.2 =
-  – Upgrade for more stable release.
-
-= 4.7.1 =
-  – Upgrade for more stable release.
-
-= 4.7.0 =
-  – Upgrade for more stable release.
-  
-= 4.6.9 =
-  – Upgrade for more stable release.
-
-= 4.6.8 =
-  – Upgrade for compatibility with cookiebot plugin.
-
-= 4.6.7 =
-  – Upgrade for using more translatable strings
-
-= 4.6.6 =
-  – Upgrade for more stable release.
-
-= 4.6.5 =
-  – Upgrade for PHP version 8 compatibility.
-
-= 4.6.4 =
-  – Upgrade for compatibility with Google Tags Manager.
-
-= 4.6.3 =
-  – Upgrade for code mirror editor in the backend.
-
-= 4.6.2 =
-  – Upgrade for more stable and secure version of plugin. Security issue was fixed.
-
-= 4.6.1 =
-  – New Gutenberg block added to display and customise the google map with live preview right inside the Gutenberg editor.
-  – Unlocked one more paid feature from pro version – Map Themes. User can apply color theme to Map UI.
-  – More hooks added to make plugin more extensible and scalable.
-
-= 4.6.0 =
-  – Implemented a popup to get feedback from the plugin user if user deactivates the plugin.
-  – Google API loaded via asynchronous way to speedup page load process.
-
-= 4.5.9 =
-  – Referrer link updated inside plugin and some internal links updated inside core framework
-
-= 4.5.8 =
-  – Plugin tags updated plus unsued file removed.
-
-= 4.5.7 =
-  – Get Direction link placeholder {get_directions_link} support added to display Get Direction link inside Infowindow.
-
-= 4.5.6 =
-  – Playground link added and support links updated
-
-= 4.5.5 =
-  – Design improvements using css
-
-= 4.5.4 =
-  – Remove entry of same category from parent category dropdown when editing that category in backend
-  
-= 4.5.3 =
-  – Translated in 15 Languages.
-  – Tutorial links added.
-
-= 4.5.2 =
-  – Maps preview added on settings page.
-
-= 4.5.1 =
-  – GDPR compatiblity issue fixed.
-
-= 4.5.0 =
-  – GDPR compatiblity issue fixed.
-
-= 4.4.9 =
-  – Fixed the initwpmaps error and use the default confirmation for delete.
-
-= 4.4.8 =
-  – Fixed the json encode error on add location page.
-
-= 4.4.7 =
-  – GDPR support added for popular wordpress plugins.
-
-= 4.4.6 =
-  Please update to 4.4.6 or above to use the most stable version of the plugin.
-
-= 4.4.5 =
-  Please update to 4.4.5 or above to use the most stable version of the plugin.

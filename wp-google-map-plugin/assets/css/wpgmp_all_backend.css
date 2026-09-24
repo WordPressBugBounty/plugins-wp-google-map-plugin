@@ -8035,3 +8035,41 @@ li#toplevel_page_wpgmp_view_overview ul {
   --fc-btn-padding-x: 12px;
   --fc-btn-font-size: 14px;
 }
+
+/*====== Google Maps API Error Style Start ======*/
+
+.wpgmp-error-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+.wpgmp-error-box {
+  max-width: 380px;
+  background: #fff;
+  border: 1px solid #e2b93b;
+  border-radius: 6px;
+  padding: 16px 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 14px;
+  color: #444;
+}
+.wpgmp-error-icon { font-size: 22px; display: block; margin-bottom: 8px; }
+
+.wpgmp-error-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #1a73e8;
+  text-decoration: underline;
+}
+.wpgmp-error-link:hover {
+  color: #0d47a1;
+}
+
+/*====== Google Maps API Error Style End ======*/
