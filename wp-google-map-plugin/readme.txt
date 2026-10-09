@@ -6,8 +6,8 @@ Author URI:        http://profiles.wordpress.org/flippercode/
 Author:            flippercode
 Requires at least: 6.0
 Requires PHP: 7.0
-Tested up to: 7.1.2
-Stable tag: 5.0.1
+Tested up to: 7.1.3
+Stable tag: 5.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ WordPress map plugin for Google Maps, OpenStreetMap & Mapbox with custom markers
 
 == Description ==
 
-WP Maps is a feature-rich free WordPress map plugin for Google Maps, OpenStreetMap, and Mapbox, with advanced features like search, filters, paginated listings, sorting, marker categories, custom marker icons, and marker clustering **included in the free version**.
+WP Maps is a free WordPress map plugin for Google Maps, OpenStreetMap, and Mapbox, with advanced features like search, filters, paginated listings, sorting, marker categories, custom marker icons, and marker clustering **included in the free version**.
 
 Create interactive maps for store locators, business directories, service areas, contact pages, and location listings without paying for essential mapping features. Organize locations into categories with their own marker icons, help visitors find locations using search and filters, and display results with sorting, pagination, and marker clustering. Whether you need a simple location map or a full-featured directory, WP Maps gives you a wide range of features to build with for free.
 
@@ -35,6 +35,7 @@ Perfect for:
 * Choose Google Maps, OpenStreetMap, or Mapbox as your map provider, with easy switching between them.
 * Create multiple maps with multiple locations and listings.
 * Enable sorting and pagination for listings.
+* Custom blocks added for Gutenberg, Elementor and Divi page builders with **Live Map Preview** in backend.
 * Get a directions link for every listing record, linking out to the official Google Maps website.
 * Enable marker clustering from the backend to group markers on the map.
 * Automatically update the map center based on filtered markers.
@@ -195,6 +196,9 @@ WP Maps helps you build advanced maps with listings for any industry. From store
 
 == Frequently Asked Questions ==
 
+= How to add google maps on WordPress website? =
+You can try using WP Maps plugin to creating beautiful interactive map with custom markers, filters and listing. You can also setup a store locator map using this plugin.
+
 = What can I use WP Maps for? =
 WP Maps can be used to create store locators, business directories, real estate maps, service area maps, location listings, and other interactive WordPress maps.
 
@@ -275,9 +279,16 @@ Explore the plugin instantly using the WordPress Playground:
 22. Street View Settings – Enable or disable Google Street View on the map
 23. Advanced Marker Settings – Customize marker animations, z-index, behavior, etc.
 24. Open Source Map Provider Settings – Configure options for Leaflet/OpenStreetMap usage
+25. Store Locator Functionality - Display a perfect store locator on frontend with radius range filter. 
 
 
 == Changelog ==
+
+= 5.0.2 =
+* New: Store Locator feature added.
+* New: "WP Maps" Gutenberg block. Choose a map from a dropdown, with a live preview in the editor.
+* New: "WP Maps" Elementor widget. Choose a map directly, with a live preview in the editor.
+* New: "WP Maps" Divi module. Choose a map directly, with a live preview in the Visual Builder.
 
 = 5.0.1 =
 * New: Added OpenFreeMap tile provider support for OpenStreetMap.
@@ -416,6 +427,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 
 == Upgrade Notice ==
+
+= 5.0.2 =
+– Please upgrade to version 5.0.2 for getting new features.
 
 = 5.0.1 =
 – Please upgrade to version 5.0.1 for getting new features.

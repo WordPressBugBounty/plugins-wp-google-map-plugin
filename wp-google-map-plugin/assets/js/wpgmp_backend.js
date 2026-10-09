@@ -26100,6 +26100,107 @@ jQuery(document).ready(function($) {
     }
  
 });
+( function ( wp ) {
+	// Guard: skip if the block editor scripts are not loaded on this page
+	if ( ! wp || ! wp.element || ! wp.blocks ) {
+		return;
+	}
+
+	var el = wp.element.createElement;
+	var useState = wp.element.useState;
+	var useEffect = wp.element.useEffect;
+	var useRef = wp.element.useRef;
+	var SelectControl = wp.components.SelectControl;
+	var PanelBody = wp.components.PanelBody;
+	var Spinner = wp.components.Spinner;
+	var InspectorControls = wp.blockEditor.InspectorControls;
+	var blockData = window.wpgmpBlockData || { maps: [] };
+
+	function MapPreview( props ) {
+		var mapId = props.mapId;
+		var state = useState( { loading: true, url: '', error: '' } );
+		var data = state[ 0 ], setData = state[ 1 ];
+		var heightState = useState( 450 );
+		var height = heightState[ 0 ], setHeight = heightState[ 1 ];
+		var frameRef = useRef( null );
+
+		// Get the signed preview URL for this map.
+		useEffect( function () {
+			var cancelled = false;
+			setData( { loading: true, url: '', error: '' } );
+
+			wp.apiFetch( { path: '/wpgmp/v1/markup/' + mapId } )
+				.then( function ( res ) {
+					if ( ! cancelled ) { setData( { loading: false, url: res.url, error: '' } ); }
+				} )
+				.catch( function ( err ) {
+					if ( ! cancelled ) {
+						setData( { loading: false, url: '', error: ( err && err.message ) || 'Could not load map preview.' } );
+					}
+				} );
+
+			return function () { cancelled = true; };
+		}, [ mapId ] );
+
+		// The preview page reports its height via postMessage.
+		useEffect( function () {
+			if ( ! frameRef.current ) { return; }
+			var win = frameRef.current.ownerDocument.defaultView || window; // works with the iframed editor canvas
+			function onMessage( e ) {
+				if ( frameRef.current && e.source === frameRef.current.contentWindow && e.data && e.data.wpgmpHeight ) {
+					setHeight( e.data.wpgmpHeight );
+				}
+			}
+			win.addEventListener( 'message', onMessage );
+			return function () { win.removeEventListener( 'message', onMessage ); };
+		}, [ data.url ] );
+
+		if ( data.loading ) {
+			return el( 'div', { style: { padding: '40px', textAlign: 'center' } }, el( Spinner ) );
+		}
+		if ( data.error ) {
+			return el( 'div', { style: { padding: '20px', border: '1px solid #cc1818', color: '#cc1818' } }, data.error );
+		}
+
+		return el( 'div', { style: { position: 'relative' } },
+			el( 'iframe', {
+				ref: frameRef,
+				src: data.url,
+				title: 'WP Maps preview',
+				scrolling: 'no',
+				style: { width: '100%', height: height + 'px', border: 0, display: 'block' }
+			} ),
+			// transparent overlay so the block stays selectable/draggable in the editor
+			el( 'div', { style: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 } } )
+		);
+	}
+
+	wp.blocks.registerBlockType( 'wpgmp/map', {
+		title: 'WP Maps',
+		icon: 'location-alt',
+		category: 'widgets',
+		keywords: [ 'map', 'google', 'location' ],
+		attributes: { mapId: { type: 'number', default: 0 } },
+
+		edit: function ( props ) {
+			var mapId = props.attributes.mapId;
+			var select = el( SelectControl, {
+				label: 'Choose Map',
+				value: mapId,
+				options: blockData.maps,
+				onChange: function ( v ) { props.setAttributes( { mapId: parseInt( v, 10 ) } ); }
+			} );
+
+			return el( 'div', {},
+				el( InspectorControls, {}, el( PanelBody, { title: 'Map Settings', initialOpen: true }, select ) ),
+				mapId
+					? el( MapPreview, { mapId: mapId } )
+					: el( 'div', { style: { padding: '20px', border: '1px dashed #999' } }, select )
+			);
+		},
+		save: function () { return null; } // dynamic block
+	} );
+} )( window.wp );
 /*!
  * Generated using the Bootstrap Customizer (https://getbootstrap.com/docs/3.4/customize/)
  */

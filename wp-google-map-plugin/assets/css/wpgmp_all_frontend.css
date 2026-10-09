@@ -202,7 +202,8 @@ div.wpgmp_search_form input.wpgmp_search_input {
 .wpgmp_toggle_main_container .amenity_type,
 div.categories_filter select,
 .wpgmp_tabs_container .wpgmp_tabs,
-.wpgmp_toggle_container {
+.wpgmp_toggle_container,
+.wpgmp_search_form select {
   background: #212f3d;
 }
 
@@ -271,7 +272,8 @@ div.categories_filter select,
 .wpgmp_toggle_container,
 .wpgmp_toggle_main_container .amenity_type,
 .fc-badge,
-.fc-btn {
+.fc-btn,
+.wpgmp_search_form .wpgmp_radius_select {
   color: #fff;
 }
 

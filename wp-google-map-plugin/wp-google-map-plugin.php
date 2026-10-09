@@ -7,7 +7,7 @@
  * Author URI: https://weplugins.com/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Version: 5.0.1
+ * Version: 5.0.2
  * Text Domain: wp-google-map-plugin
  * Domain Path: /lang
 */
@@ -81,7 +81,11 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 
 			add_shortcode( 'put_wpgm', 					  [ $this, 'wpgmp_show_location_in_map'] );
 			
+			// Builder integrations must load on frontend too (block registration, Elementor, Divi).
+			require_once plugin_dir_path( __FILE__ ) . 'wpgmp-builders/loader.php';
+			
 			if ( is_admin() ) {
+
 				
 				add_action( 'admin_head', 				  [ $this, 'wpgmp_customizer_font_family']);
 				add_action( 'admin_menu', 				  [ $this, 'wpgmp_create_menu' ] );
@@ -1411,7 +1415,7 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			
 			if ( is_admin() )
 			$this->wpgmp_define( 'WPGMP_SLUG', 'wpgmp_view_overview' );
-			$this->wpgmp_define( 'WPGMP_VERSION', '5.0.1' );
+			$this->wpgmp_define( 'WPGMP_VERSION', '5.0.2' );
 			$this->wpgmp_define( 'WPGMP_FOLDER', basename( dirname( __FILE__ ) ) );
 			$this->wpgmp_define( 'WPGMP_DIR', plugin_dir_path( __FILE__ ) );
 			$this->wpgmp_define( 'WPGMP_ICONS_DIR', WPGMP_DIR . '/assets/images/icons/' );

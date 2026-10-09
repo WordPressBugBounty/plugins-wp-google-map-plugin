@@ -148,7 +148,6 @@ $form->add_element(
 		'desc'    => esc_html__( 'Apply google autosuggest on search field.', 'wp-google-map-plugin' ),
 		'class'   => 'chkbox_class wpgmp_display_listing wpgmp_search_display',
 		'show'    => 'false',
-		'pro'    => true,
 	)
 );
 
@@ -199,7 +198,33 @@ $form->add_element(
 		'class'   => 'chkbox_class wpgmp_display_listing switch_onoff',
 		'show'    => 'false',
 		'data'    => array( 'target' => '.wpgmp_radius_filter' ),
-		'pro' => true
+	)
+);
+
+$dimension_options = array(
+	'miles' => esc_html__( 'Miles', 'wp-google-map-plugin' ),
+	'km'    => esc_html__( 'KM', 'wp-google-map-plugin' ),
+);
+$form->add_element(
+	'select', 'map_all_control[wpgmp_radius_dimension]', array(
+		'label'   => esc_html__( 'Dimension', 'wp-google-map-plugin' ),
+		'current' => isset( $data['map_all_control']['wpgmp_radius_dimension'] ) ? $data['map_all_control']['wpgmp_radius_dimension'] : '',
+		'desc'    => esc_html__( 'Choose radius dimension in miles or km.', 'wp-google-map-plugin' ),
+		'options' => $dimension_options,
+		'class'   => 'form-control  wpgmp_radius_filter',
+		'show'    => 'false',
+	)
+);
+
+$form->add_element(
+	'text', 'map_all_control[wpgmp_radius_options]', array(
+		'label'         => esc_html__( 'Radius Options', 'wp-google-map-plugin' ),
+		'value'         => isset( $data['map_all_control']['wpgmp_radius_options'] ) ? $data['map_all_control']['wpgmp_radius_options'] : '',
+		'desc'          => esc_html__( 'Set radius options. Enter comma seperated numbers.', 'wp-google-map-plugin' ),
+		'placeholder'          => esc_html__( 'Set radius options. Enter comma seperated numbers.', 'wp-google-map-plugin' ),
+		'class'         => 'form-control  wpgmp_radius_filter',
+		'show'          => 'false',
+		'default_value' => '5,10,15,20,25,50,100,200,500',
 	)
 );
 
@@ -345,7 +370,33 @@ $form->add_element(
 		'class'   => 'chkbox_class wpgmp_display_listing switch_onoff',
 		'show'    => 'false',
 		'data'    => array( 'target' => '.wpgmp_radius_filter_apply' ),
-		'pro' => true
+	)
+);
+
+$form->add_element(
+	'text', 'map_all_control[wpgmp_default_radius]', array(
+		'label'         => esc_html__( 'Default Radius', 'wp-google-map-plugin' ),
+		'value'         => isset( $data['map_all_control']['wpgmp_default_radius'] ) ? $data['map_all_control']['wpgmp_default_radius'] : '',
+		'desc'          => esc_html__( 'Enter the default radius value to search in', 'wp-google-map-plugin' ),
+		'placeholder'   => esc_html__( 'Enter the default radius value to search in', 'wp-google-map-plugin' ),
+		'class'         => 'form-control wpgmp_radius_filter_apply',
+		'show'          => 'false',
+		'default_value' => '100',
+	)
+);
+
+$dimension_options = array(
+	'miles' => esc_html__( 'Miles', 'wp-google-map-plugin' ),
+	'km'    => esc_html__( 'KM', 'wp-google-map-plugin' ),
+);
+$form->add_element(
+	'select', 'map_all_control[wpgmp_default_radius_dimension]', array(
+		'label'   => esc_html__( 'Dimension', 'wp-google-map-plugin' ),
+		'current' => isset( $data['map_all_control']['wpgmp_default_radius_dimension'] ) ? $data['map_all_control']['wpgmp_default_radius_dimension'] : '',
+		'desc'    => esc_html__( 'Choose default radius dimension in miles or km.', 'wp-google-map-plugin' ),
+		'options' => $dimension_options,
+		'class'   => 'form-control  wpgmp_radius_filter_apply',
+		'show'    => 'false',
 	)
 );
 

@@ -3207,6 +3207,107 @@ resize_map() {
     map_obj.map.setCenter(position);
     map_obj.map.setZoom(17);
   }
+
+  draw_radius_circle(lat, lng) {
+
+    const map_obj = this;
+    let radius = "";
+    const $radiusField = $(map_obj.container).find('[data-name="radius"]');
+    const isGoogle = map_obj.isMapProvider("google");
+  
+    if ($radiusField.length > 0) {
+      radius = $radiusField.val();
+    }
+  
+    const listing = map_obj.map_data.listing || {};
+    let dimension = listing.radius_dimension || "km";
+  
+    // Apply default if nothing selected
+    if (
+      listing.apply_default_radius === true &&
+      listing.default_radius &&
+      radius === ""
+    ) {
+      radius = listing.default_radius;
+      dimension = listing.default_radius_dimension || "km";
+    }
+  
+    // Convert to meters
+    const radiusMeters =
+      dimension === "km"
+        ? parseFloat(radius) * 1000
+        : parseFloat(radius) * 1609.34;
+
+    const center = [
+        parseFloat(lat),
+        parseFloat(lng)
+    ];
+
+    if(isGoogle){
+
+      if (map_obj.radius_circle) {
+
+          // Update center
+          map_obj.radius_circle.setCenter({
+              lat: center[0],
+              lng: center[1]
+          });
+
+          // Update radius
+          map_obj.radius_circle.setRadius(radiusMeters);
+
+      } else {
+
+          // Create circle for the first time
+          map_obj.radius_circle = new google.maps.Circle({
+              map: map_obj.map,
+              center: {
+                  lat: center[0],
+                  lng: center[1]
+              },
+              radius: radiusMeters,
+              strokeColor: '#a61e34',
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: '#a61e34',
+              fillOpacity: 0.15
+          });
+      }
+
+      map_obj.map.fitBounds(map_obj.radius_circle.getBounds());
+
+    }else{
+      if (map_obj.radius_circle) {
+
+        // Update center
+        map_obj.radius_circle.setLatLng(center);
+
+        // Update radius
+        map_obj.radius_circle.setRadius(radiusMeters);
+
+      } else {
+
+        // Create Leaflet circle
+        map_obj.radius_circle = L.circle(
+            center,
+            {
+                radius: radiusMeters,
+                color: '#a61e34',
+                weight: 2,
+                opacity: 0.8,
+                fillColor: '#a61e34',
+                fillOpacity: 0.15
+            }
+        ).addTo(map_obj.map);
+      }
+
+      // Fit Leaflet map to circle
+      map_obj.map.fitBounds(
+          map_obj.radius_circle.getBounds()
+      );
+      
+    }
+  }
   
   toggle_bounce(marker) {
     const isGoogle = this.isMapProvider("google");
@@ -4124,11 +4225,23 @@ fit_bounds() {
         autosuggest_class +
         '" placeholder="' +
         wpgmp_local.search_placeholder +
-        '"></div></div>';
+        '">';
+        if(!this.settings.is_mobile){
+          content += " " + this.create_radius() + " ";
+        }
+        
+        content += '</div></div>';
     }
 
+    let radius_html = '';
+
+    if (this.settings.is_mobile) {
+        radius_html = this.create_radius();
+    }
+    
     content +=
       '<div class="categories_filter">' +
+       radius_html +
       this.create_filters() +
       '<div data-container="wpgmp-filters-container"></div>';
 
@@ -4140,8 +4253,6 @@ fit_bounds() {
     ) {
       content += " " + this.create_perpage_option() + " ";
     }
-
-    content += " " + this.create_radius() + " ";
 
     if (
       hide_locations != true &&
@@ -4985,6 +5096,13 @@ fit_bounds() {
                     !exclude_fields.includes("{marker_city}")))
               ) {
                 show = true;
+              } else if (
+                typeof map_obj.search_area != "undefined" &&
+                map_obj.search_area != "" &&
+                map_obj.wpgmp_within_radius(place, map_obj.search_area) ===
+                  true
+              ) {
+                show = true;
               } else {
                 show = false;
               }
@@ -5080,6 +5198,13 @@ fit_bounds() {
               } else if (
                 place.location.city &&
                 place.location.city.toLowerCase().indexOf(search_term) >= 0
+              ) {
+                show = true;
+              } else if (
+                typeof map_obj.search_area != "undefined" &&
+                map_obj.search_area != "" &&
+                map_obj.wpgmp_within_radius(place, map_obj.search_area) ===
+                  true
               ) {
                 show = true;
               } else {
@@ -5412,8 +5537,66 @@ fit_bounds() {
     $container.on("change", `select[data-wpgmp-filter="true"][data-wpgmp-map-id="${map_id}"]`, () => {
       map_obj.update_filters();
     });
+
+    $container.on("change", `select[data-wpgmp-map-id="${map_id}"][data-name="radius"]`, function () {
+    const $searchBox = $container.find('[data-input="wpgmp-search-text"]');
+    const isGoogle = map_obj.isMapProvider("google");
+      
+      $searchBox.removeClass("wpgmp_error");
+      // Prevent override if locationSortByDistance plugin is active or no search box
+      if (!$searchBox.length) return;
+
+      if (!$searchBox.val().trim()) {
+        $searchBox.addClass("wpgmp_error").focus();
+        return;
+      }
+    
+      const query = $searchBox.val().trim();
+      if (query.length >= 2 && $(this).val() !== "") {
+        map_obj.wpgmp_set_search_area(query);
+
+        if (
+            map_obj.search_area &&
+            typeof map_obj.search_area.lat === 'function' &&
+            typeof map_obj.search_area.lng === 'function'
+        ) {
+            map_obj.draw_radius_circle(
+                map_obj.search_area.lat(),
+                map_obj.search_area.lng()
+            );
+        } else if (map_obj.search_area &&
+            map_obj.search_area.lat != '' &&
+            map_obj.search_area.lng != ''
+        ){
+          const lat = map_obj.search_area?.lat
+              ? map_obj.search_area.lat
+              : (map_obj.search_area?.[0] || '');
+
+          const lng = map_obj.search_area?.lng
+              ? map_obj.search_area.lng
+              : (map_obj.search_area?.[1] || '');
+
+              map_obj.draw_radius_circle(lat,lng);
+        }
+      } else {
+        if (map_obj.radius_circle) {
+          if (isGoogle) {
+          // Remove Google Maps circle
+          map_obj.radius_circle.setMap(null);
+
+        } else {
+          // Remove Leaflet circle
+          map_obj.map.removeLayer(map_obj.radius_circle);
+        }
+          map_obj.radius_circle = null;
+        }
+        map_obj.search_area = "";
+        map_obj.update_filters();
+      }
+    });
     
     $container.on('click', '.categories_filter_reset_btn', function () {
+      const isGoogle = map_obj.isMapProvider("google");
       $(map_obj.container).find('.wpgmp_filter_wrappers select').each(function () {
           $(this).find('option:first').attr('selected', 'selected');
           $(this).find('option:first').prop('selected', 'selected');
@@ -5433,6 +5616,17 @@ fit_bounds() {
 
           });
 
+      }
+      if (map_obj.radius_circle) {
+        if (isGoogle) {
+          // Remove Google Maps circle
+          map_obj.radius_circle.setMap(null);
+
+        } else {
+          // Remove Leaflet circle
+          map_obj.map.removeLayer(map_obj.radius_circle);
+        }
+        map_obj.radius_circle = null;
       }
       map_obj.update_filters();
 
@@ -5483,6 +5677,7 @@ fit_bounds() {
     $container.on("keyup", '[data-input="wpgmp-search-text"]', function () {
       const searchVal = $(this).val().trim();
       $container.find('[data-filter="map-radius"]').val("");
+      const isGoogle = map_obj.isMapProvider("google");
       map_obj.search_area = "";
   
       if (searchVal.length >= 2 && map_obj.map_data.listing.apply_default_radius === true) {
@@ -5490,6 +5685,17 @@ fit_bounds() {
         map_obj.wpgmp_set_search_area(searchVal);
 
       } else {
+        if (map_obj.radius_circle) {
+          if (isGoogle) {
+            // Remove Google Maps circle
+            map_obj.radius_circle.setMap(null);
+
+          } else {
+            // Remove Leaflet circle
+            map_obj.map.removeLayer(map_obj.radius_circle);
+          }
+          map_obj.radius_circle = null;
+        }
         map_obj.update_filters();
       }
     });
@@ -5920,7 +6126,7 @@ fit_bounds() {
 
       if (radius_options != undefined) {
         content +=
-          '<select data-name="radius"  data-wpgmp-map-id="'+this.map_data.map_property.map_id+'" name="map_radius"><option value="">' +
+          '<div class="wpgmp_radius_wrapper"><select data-name="radius" class="wpgmp_radius_select"  data-wpgmp-map-id="'+this.map_data.map_property.map_id+'" name="map_radius"><option value="">' +
           wpgmp_local.select_radius +
           "</option>";
         var radius_dimension = this.map_data.listing.radius_dimension;
@@ -5945,7 +6151,7 @@ fit_bounds() {
               "</option>";
           }
         });
-        content += "</select>";
+        content += "</select></div>";
       }
     }
 
@@ -6419,8 +6625,6 @@ fit_bounds() {
   get_user_position() { }
 
   wpgmp_get_nearby_locations() {}
-  wpgmp_within_radius() {}
-  wpgmp_set_search_area() {}
   map_widgets() {}
   widget_route_tab() {}
   widget_nearby() {}
@@ -6433,6 +6637,60 @@ fit_bounds() {
   wpgmp_find_direction() {}
   wpgmp_direction_steps() {}
   register_direction_tab() {}
+
+  wpgmp_within_radius(place, search_area) {
+    const map_obj = this;
+    const isGoogle = map_obj.isMapProvider("google");
+  
+    let radius = "";
+    const $radiusField = $(map_obj.container).find('[data-name="radius"]');
+  
+    if ($radiusField.length > 0) {
+      radius = $radiusField.val();
+    }
+  
+    const listing = map_obj.map_data.listing || {};
+    let dimension = listing.radius_dimension || "km";
+  
+    // Apply default if nothing selected
+    if (
+      listing.apply_default_radius === true &&
+      listing.default_radius &&
+      radius === ""
+    ) {
+      radius = listing.default_radius;
+      dimension = listing.default_radius_dimension || "km";
+    }
+  
+    // Convert to meters
+    const radiusMeters =
+      dimension === "km"
+        ? parseFloat(radius) * 1000
+        : parseFloat(radius) * 1609.34;
+  
+    // Skip if input is not valid
+    if (!radiusMeters || isNaN(radiusMeters)) return false;
+  
+    let distance = 0;
+  
+    if (isGoogle) {
+      if (
+        typeof google.maps.geometry !== "undefined" &&
+        google.maps.geometry.spherical
+      ) {
+        distance = google.maps.geometry.spherical.computeDistanceBetween(
+          place.marker.getPosition(),
+          search_area
+        );
+      }
+    } else {
+      const latlng1 = place.marker.getLatLng();
+      const latlng2 = search_area;
+      distance = latlng1.distanceTo(latlng2); // returns meters
+    }
+  
+    return distance < radiusMeters;
+  }
   
   wpgmp_sort_distance(obj) {
     var arr = [];
@@ -6658,6 +6916,20 @@ fit_bounds() {
 
   }
 
+  wpgmp_set_search_area(address) {
+    var map_obj = this;
+    map_obj.wpgmp_geocode_address(address).then((info) => {
+      if (info && info.lat && info.lng) {
+        map_obj.search_area = map_obj.isMapProvider("google")
+          ? new google.maps.LatLng(info.lat, info.lng)
+          : L.latLng(info.lat, info.lng);
+      } else {
+        map_obj.search_area = "";
+      }
+      map_obj.update_filters();
+    });
+  }
+
   wpgmp_extract_place_data(place) {
     var map_obj = this;
     const data = {
@@ -6776,6 +7048,14 @@ wpgmp_handle_place_selection(place, inputField) {
   } else {
     // Other pages (frontend search, etc.)
     map_obj.map.setCenter(isGoogle ? place.location : [lat, lng]);
+
+    const listing = map_obj.map_data.listing || {};
+  
+    // Apply default if nothing selected
+    if (listing.apply_default_radius === true && listing.default_radius && listing.default_radius != "" ) {
+      // Apply radius circle
+      map_obj.draw_radius_circle(lat, lng);
+    }
 
     $(inputField).data("longitude", lng);
     $(inputField).data("latitude", lat);
@@ -11003,7 +11283,11 @@ map_loaded() {
   window.WpgmpLeafletMaps = WpgmpLeafletMaps;
 })(jQuery, window, document);
 
-// ====== Google Maps API Error Handler (add at top of file) ======
+// ====== Google Maps API Error Handler (add at top of maps.js) ======
+// - Runs only for maps that use the Google provider (not Leaflet / OpenStreetMap etc.).
+// - Does nothing inside the Gutenberg / Elementor / Divi live previews
+//   (the preview document sets window.wpgmpBuilderPreview = true before the plugin scripts load).
+
 window.gm_authFailure = function () {
   showWpgmpApiError(
     'Google Maps authentication failed. Check your API key, billing status, and domain restrictions.',
@@ -11012,65 +11296,25 @@ window.gm_authFailure = function () {
 };
 
 (function () {
-const patterns = [
-  {
-    match: 'NoApiKeys',
-    msg: 'No Google Maps API key has been set. Please add a valid API key in the plugin settings.',
-    link: 'https://developers.google.com/maps/documentation/javascript/error-messages#no-api-keys'
-  },
-  {
-    match: 'InvalidKeyMapError',
-    msg: 'The Google Maps API key is invalid.',
-    link: 'https://developers.google.com/maps/documentation/javascript/error-messages#invalid-key-map-error'
-  },
-  {
-    match: 'ApiProjectMapError',
-    msg: 'There is a problem with the Google Maps API configuration. The API key may not have been added, may be invalid, or the Google Cloud project linked to the API key may be deleted, disabled, or misconfigured.',
-    link: 'https://developers.google.com/maps/documentation/javascript/error-messages#api-project-map-error'
-  },
-  {
-    match: 'BillingNotEnabledMapError',
-    msg: 'Billing is not enabled for this Google Maps API project.',
-    link: 'https://developers.google.com/maps/documentation/javascript/error-messages#billing-not-enabled-map-error'
-  },
-  {
-    match: 'ApiNotActivatedMapError',
-    msg: 'The Maps JavaScript API is not activated for this project.',
-    link: 'https://developers.google.com/maps/documentation/javascript/error-messages#api-not-activated-map-error'
-  },
-  {
-    match: 'RefererNotAllowedMapError',
-    msg: 'This domain is not authorized to use this API key.',
-    link: 'https://developers.google.com/maps/documentation/javascript/error-messages#referer-not-allowed-map-error'
-  },
-  {
-    match: 'OverQuotaMapError',
-    msg: 'The Google Maps API quota has been exceeded for this key.',
-    link: 'https://developers.google.com/maps/documentation/javascript/error-messages#over-quota-map-error'
-  },
-];
+  if (window.wpgmpBuilderPreview) return; // builder preview: don't hook the console at all
 
-  const GENERIC_DOC_LINK = 'https://developers.google.com/maps/documentation/javascript/error-messages';
-
-  function cleanGoogleMessage(msg) {
-    // Strip Google's trailing doc URL from the raw message, if present
-    return msg.split('https://developers.google.com')[0].trim();
-  }
+  const patterns = [
+    { match: 'NoApiKeys', msg: 'No Google Maps API key has been set. Please add a valid API key in the plugin settings.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#no-api-keys' },
+    { match: 'InvalidKeyMapError', msg: 'The Google Maps API key is invalid.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#invalid-key-map-error' },
+    { match: 'ApiProjectMapError', msg: 'There is a problem with the Google Maps API configuration. The API key may not have been added, may be invalid, or the Google Cloud project linked to the API key may be deleted, disabled, or misconfigured.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#api-project-map-error' },
+    { match: 'BillingNotEnabledMapError', msg: 'Billing is not enabled for this Google Maps API project.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#billing-not-enabled-map-error' },
+    { match: 'ApiNotActivatedMapError', msg: 'The Maps JavaScript API is not activated for this project.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#api-not-activated-map-error' },
+    { match: 'OverQuotaMapError', msg: 'The Google Maps API quota has been exceeded for this key.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#over-quota-map-error' },
+  ];
 
   function intercept(level) {
     const original = console[level];
     console[level] = function (...args) {
       const msg = args.join(' ');
       const hit = patterns.find(p => msg.includes(p.match));
-
       if (hit) {
-        // Known error — use friendly message + specific doc link
         showWpgmpApiError(hit.msg, hit.link);
-      } else if (msg.includes('Google Maps') || msg.includes('MapError') || msg.includes('ApiKeys')) {
-        // Unrecognized Google Maps error — show actual message + generic doc link
-        // showWpgmpApiError(cleanGoogleMessage(msg), GENERIC_DOC_LINK);
       }
-
       original.apply(console, args);
     };
   }
@@ -11079,12 +11323,26 @@ const patterns = [
   intercept('warn');
 })();
 
+// Returns true only when this map element belongs to a Google-provider map.
+function wpgmpIsGoogleMap(mapEl) {
+  const container = mapEl.closest('.wpgmp_map_container');
+  if (container) {
+    const m = container.className.match(/wpgmp-map-provider-([\w-]+)/);
+    if (m) return m[1] === 'google';
+  }
+  // No provider class found (e.g. the admin preview): fall back to whether Google Maps is loaded.
+  return !!(window.google && window.google.maps);
+}
+
 function showWpgmpApiError(message, docLink) {
-  if (!wpgmp_local.is_admin) return;
+  if (window.wpgmpBuilderPreview) return;                        // not in builder previews
+  if (!window.wpgmp_local || !wpgmp_local.is_admin) return;      // admins only
+
   const mapElements = document.querySelectorAll('.wpgmp_map, #wpgmp_map, #wpgmp_map_preview');
 
   mapElements.forEach(function (mapEl) {
-    if (mapEl.querySelector('.wpgmp-error-overlay')) return; // avoid duplicates
+    if (!wpgmpIsGoogleMap(mapEl)) return;                        // Google provider only
+    if (mapEl.querySelector('.wpgmp-error-overlay')) return;     // avoid duplicates
 
     mapEl.style.position = mapEl.style.position || 'relative';
 

@@ -1031,6 +1031,14 @@ if ( ! empty( $map->map_all_control['display_listing'] ) && $map->map_all_contro
 		$map->map_all_control['wpgmp_display_sorting_filter'] = false;
 	}
 
+	if ( ! isset( $map->map_all_control['wpgmp_display_radius_filter'] ) ) {
+		$map->map_all_control['wpgmp_display_radius_filter'] = false;
+	}
+
+	if ( ! isset( $map->map_all_control['wpgmp_apply_radius_only'] ) ) {
+		$map->map_all_control['wpgmp_apply_radius_only'] = false;
+	}
+
 	if ( ! isset( $map->map_all_control['hide_locations'] ) ) {
 		$map->map_all_control['hide_locations'] = false;
 	}
@@ -1045,6 +1053,10 @@ if ( ! empty( $map->map_all_control['display_listing'] ) && $map->map_all_contro
 
 	if ( ! isset( $map->map_all_control['wpgmp_display_sorting_filter'] ) ) {
 		$map->map_all_control['wpgmp_display_sorting_filter'] = false;
+	}
+
+	if ( ! isset( $map->map_all_control['search_field_autosuggest'] ) ) {
+		$map->map_all_control['search_field_autosuggest'] = false;
 	}
 
 	if ( ! isset( $map->map_all_control['wpgmp_display_category_filter'] ) ) {
@@ -1062,15 +1074,15 @@ if ( ! empty( $map->map_all_control['display_listing'] ) && $map->map_all_contro
 	$map_data['listing'] = array(
 		'listing_header'                   => $map->map_all_control['wpgmp_before_listing'],
 		'display_search_form'              => ( 'true' == $map->map_all_control['wpgmp_search_display'] ),
-		'search_field_autosuggest'         => '',
+		'search_field_autosuggest'         => ( $map->map_all_control['search_field_autosuggest'] == 'true' ),
 		'display_category_filter'          => ( $map->map_all_control['wpgmp_display_category_filter'] == 'true' ),
 		'display_sorting_filter'           => ( 'true' == $map->map_all_control['wpgmp_display_sorting_filter'] ),
-		'display_radius_filter'            => '',
-		'radius_dimension'                 => '',
-		'radius_options'                   => '',
-		'apply_default_radius'             => '',
-		'default_radius'                   => "",
-		'default_radius_dimension'         => "",
+		'display_radius_filter'            => ( 'true' == $map->map_all_control['wpgmp_display_radius_filter'] ),
+		'radius_dimension'                 => (isset($map->map_all_control['wpgmp_radius_dimension'])) ? $map->map_all_control['wpgmp_radius_dimension'] : "",
+		'radius_options'                   => (isset($map->map_all_control['wpgmp_radius_options'])) ? $map->map_all_control['wpgmp_radius_options'] : "",
+		'apply_default_radius'             => ( 'true' == $map->map_all_control['wpgmp_apply_radius_only'] ),
+		'default_radius'                   => (isset($map->map_all_control['wpgmp_default_radius'])) ? $map->map_all_control['wpgmp_default_radius'] : "",
+		'default_radius_dimension'         => (isset($map->map_all_control['wpgmp_default_radius_dimension']))? $map->map_all_control['wpgmp_default_radius_dimension'] : "",
 		'display_location_per_page_filter' => ( 'true' == $map->map_all_control['wpgmp_display_location_per_page_filter'] ),
 		'display_print_option'             => ( $map->map_all_control['wpgmp_display_print_option'] == 'true' ),
 		'display_grid_option'              => '',
@@ -1542,11 +1554,11 @@ if ( isset( $map->map_all_control['apply_custom_design'] ) && $map->map_all_cont
 		$css_rules[] = $base_class . '.wpgmp_tabs_container .wpgmp_tabs li a.active, ' . $base_class . '.fc-primary-bg, ' . $base_class . '.wpgmp_infowindow .fc-badge.info, ' . $base_class . '.wpgmp_toggle_main_container .amenity_type:hover, ' . $base_class . '
 .wpgmp_direction_container p input.wpgmp_find_direction,
 ' . $base_class . '.wpgmp_nearby_container .wpgmp_find_nearby_button, ' . $base_class . '.fc-label-info, ' . $base_class . '.fc-badge.info, ' . $base_class . '.wpgmp_pagination span,
-' . $base_class . '.wpgmp_pagination a, ' . $base_class . 'div.categories_filter select,  ' . $base_class . '.wpgmp_toggle_container, ' . $base_class . ' .categories_filter_reset_btn,' . $base_class . '.categories_filter input[type="button"], ' . $base_class . '.categories_filter_reset_btn:hover {
+' . $base_class . '.wpgmp_pagination a, ' . $base_class . 'div.categories_filter select,  ' . $base_class . '.wpgmp_toggle_container, ' . $base_class . ' .categories_filter_reset_btn,' . $base_class . '.categories_filter input[type="button"], ' . $base_class . '.categories_filter_reset_btn:hover, .wpgmp_search_form .wpgmp_radius_select {
         background-color: ' . $secondary_color . ';
 }
 
-' . $base_class . '.wpgmp-select-all,' . $base_class . '.fc-primary-fg{
+' . $base_class . '.wpgmp-select-all,' . $base_class . '.fc-primary-fg, , .wpgmp_search_form .wpgmp_radius_select{
         color: ' . $secondary_color . ';
 } 
 
@@ -1578,11 +1590,11 @@ if ( isset( $map->map_all_control['apply_own_schema'] ) && $map->map_all_control
 	if ( trim( $map->map_all_control['wpgmp_secondary_color'] ) != '' && $map->map_all_control['wpgmp_secondary_color'] != '#' ) {
 
 		$primary_color = $map->map_all_control['wpgmp_secondary_color'];
-		$css_rules[]   = $base_class . '.wpgmp_tabs_container .wpgmp_tabs, ' . $base_class . '.fc-secondary-bg, ' . $base_class . '.wpgmp_toggle_main_container .amenity_type, ' . $base_class . '.wpgmp_pagination span.current, ' . $base_class . '.wpgmp_pagination a:hover, .wpgmp_toggle_main_container input[type="submit"] {
+		$css_rules[]   = $base_class . '.wpgmp_tabs_container .wpgmp_tabs, ' . $base_class . '.fc-secondary-bg, ' . $base_class . '.wpgmp_toggle_main_container .amenity_type, ' . $base_class . '.wpgmp_pagination span.current, ' . $base_class . '.wpgmp_pagination a:hover, .wpgmp_toggle_main_container input[type="submit"], .wpgmp_search_form .wpgmp_radius_select {
 background: ' . $primary_color . '; 
 }
 
-' . $base_class . '.fc-secondary-fg,' . $base_class . '.wpgmp_infowindow .fc-item-title,' . $base_class . '.wpgmp_tabs_container .wpgmp_tab_item .wpgmp_cat_title, ' . $base_class . '.wpgmp_location_title a.place_title {
+' . $base_class . '.fc-secondary-fg,' . $base_class . '.wpgmp_infowindow .fc-item-title,' . $base_class . '.wpgmp_tabs_container .wpgmp_tab_item .wpgmp_cat_title, ' . $base_class . '.wpgmp_location_title a.place_title, .wpgmp_search_form .wpgmp_radius_select {
     color: ' . $primary_color . '; 
 }
 
@@ -1603,7 +1615,7 @@ background: ' . $primary_color . ';
 		$css_rules[] = $base_class . '.wpgmp_tabs_container .wpgmp_tabs li a.active, ' . $base_class . '.fc-primary-bg, ' . $base_class . '.wpgmp_infowindow .fc-badge.info, ' . $base_class . '.wpgmp_toggle_main_container .amenity_type:hover, ' . $base_class . '
 .wpgmp_direction_container p input.wpgmp_find_direction,
 ' . $base_class . '.wpgmp_nearby_container .wpgmp_find_nearby_button, ' . $base_class . '.fc-label-info, ' . $base_class . '.fc-badge.info, ' . $base_class . '.wpgmp_pagination span,
-' . $base_class . '.wpgmp_pagination a, ' . $base_class . 'div.categories_filter select,  ' . $base_class . '.wpgmp_toggle_container, ' . $base_class . '.categories_filter_reset_btn,' . $base_class . '.categories_filter input[type="button"], ' . $base_class . '.categories_filter_reset_btn:hover{
+' . $base_class . '.wpgmp_pagination a, ' . $base_class . 'div.categories_filter select,  ' . $base_class . '.wpgmp_toggle_container, ' . $base_class . '.categories_filter_reset_btn,' . $base_class . '.categories_filter input[type="button"], ' . $base_class . '.categories_filter_reset_btn:hover, .wpgmp_search_form .wpgmp_radius_select {
         background-color: ' . $secondary_color . ';
 }
 
@@ -1683,6 +1695,150 @@ if ( isset( $map->map_all_control['control_transparent'] ) && $map->map_all_cont
     border-radius: 8px !important;
     box-shadow: rgb(0 0 0 / 30%) 0px 1px 4px -1px;
 }';
+}
+
+if( isset($map->map_all_control['wpgmp_display_radius_filter']) && $map->map_all_control['wpgmp_display_radius_filter'] && !$is_mobile){
+
+	$css_rules[] = '/* Main search bar */
+.wpgmp_search_form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 45px;
+    padding: 5px;
+    box-sizing: border-box;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Autocomplete area */
+.wpgmp_search_form .wpgmp-autocomplete-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    margin-bottom: 0;
+}
+
+/* Search input */
+.wpgmp_search_form .wpgmp_search_input {
+    width: 100%;
+    height: 100%;
+    padding: 0 15px;
+
+    border: 0 !important;
+    outline: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+/* Radius section */
+.wpgmp_search_form .wpgmp_radius_wrapper {
+    display: flex;
+    align-items: center;
+
+    height: 36px;
+    margin-left: 5px;
+    padding-left: 10px;
+
+    border-left: 1px solid #e5e5e5;
+}
+
+/* Radius dropdown */
+.wpgmp_search_form .wpgmp_radius_select {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 125px;
+    height: 34px;
+
+    padding: 0 30px 0 10px;
+
+    border: 0 !important;
+    border-radius: 6px;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+    outline: none !important;
+    box-shadow: none !important;
+
+    /* Custom dropdown arrow */
+    background-image:
+        linear-gradient(45deg, transparent 50%, #ffff 50%),
+        linear-gradient(135deg, #ffff 50%, transparent 50%);
+    background-position:
+        calc(100% - 13px) 14px,
+        calc(100% - 8px) 14px;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+}
+
+
+
+/* Focus */
+.wpgmp_search_form .wpgmp_radius_select:focus {
+    border-color: #e57d22 !important;
+}
+
+/* Search bar focus */
+.wpgmp_search_form:focus-within {
+    border-color: #e57d22;
+    box-shadow: 0 3px 15px rgba(229, 125, 34, 0.15);
+}
+
+
+/* Autocomplete results */
+.wpgmp_search_form .wpgmp-autosuggest-results {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    right: 0;
+    z-index: 9999;
+
+    margin: 0;
+    padding: 0;
+
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    .wpgmp_search_form {
+        height: 50px;
+    }
+
+    .wpgmp_search_form .wpgmp_search_input {
+        padding: 0 10px;
+        font-size: 13px;
+    }
+
+    .wpgmp_search_form .wpgmp_radius_wrapper {
+        margin-left: 3px;
+        padding-left: 5px;
+    }
+
+    .wpgmp_search_form .wpgmp_radius_select {
+        width: 105px;
+        padding-left: 7px;
+        padding-right: 20px;
+        font-size: 12px;
+    }
+}';
+
 }
 
 

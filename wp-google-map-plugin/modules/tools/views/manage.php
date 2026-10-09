@@ -45,7 +45,7 @@ if ( isset( $_POST['operation'] ) and 'upload_sampledata' == $_POST['operation']
 
 	$import_form->add_element(
 		'message', 'sampledata_message', array(
-			'value' => esc_html__( 'Click below to install sample data. This is very useful to get started. 2 categories, 5 locations, 2 routes and 1 map will be created for demonstration purpose.', 'wp-google-map-plugin' ),
+			'value' => esc_html__( 'Click below to install sample data. This is very useful to get started. 2 categories, 5 locations and 1 map will be created for demonstration purpose.', 'wp-google-map-plugin' ),
 			'class' => 'fc-alert fc-alert-info',
 			'before' => '<div class="fc-12">',
 			'after'  => '</div>',
