@@ -27721,17 +27721,40 @@ if (typeof jQuery === 'undefined') {
         //intialize add more...
 
         
-        $(".wpgmp_check_key").click(function() {
-            $('.wpgmp_apitest').html("...");
-            var wpgmp_maps_key = $("input[name='wpgmp_api_key']").val();
-            var address = 'london';
-            $.get("https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=" + wpgmp_maps_key, function(data) {
-            if (data.status == 'OK') { 
-                     $('.wpgmp_apitest').html("<div class='fc-alert fc-alert-success'>Congratulation, the API key you created is perfect. You can now <a class='create_location_link' target='_blank' href='https://www.wpmapspro.com/docs/create-a-location-using-simple-method/'>start</a> creating maps!</div>");
-                } else {
-                     $('.wpgmp_apitest').html("<div class='fc-alert fc-alert-danger'>"+data.error_message+"</div>");
+        $(".wpgmp_check_key").click(function () {
+            var $out = $('.wpgmp_apitest');
+            var key = $("input[name='wpgmp_api_key']").val().trim();
+            var successHtml = "Congratulations, the API key you created is perfect. You can now <a class='create_location_link' target='_blank' href='https://www.wpmapspro.com/docs/create-a-location-using-simple-method/'>start</a> creating maps!";
+
+            function show(type, html) {
+                $out.html("<div class='fc-alert fc-alert-" + type + "'>" + html + "</div>");
+            }
+
+            $out.html("...");
+
+            $.get("https://maps.googleapis.com/maps/api/geocode/json", {
+                address: '1600 Amphitheatre Parkway, Mountain View, CA',
+                key: key
+            }).done(function (data) {
+                if (data.status === 'OK') {
+                    return show('success', successHtml);
                 }
 
+                var msg = data.error_message || data.status;
+
+                if (/referer restrictions/i.test(msg)) {
+                    // Key is valid but referrer-restricted: check what the map reported
+                    var mapFailed = $('#wpgmp_map_preview .gm-err-container').length;
+                    if (mapFailed) {
+                        show('danger', $('<div>').text(msg).html());
+                    } else {
+                        show('success', successHtml);
+                    }
+                } else {
+                    show('danger', $('<div>').text(msg).html());
+                }
+            }).fail(function () {
+                show('danger', 'Could not connect to Google.');
             });
         });
 

@@ -7,7 +7,7 @@ Author:            flippercode
 Requires at least: 6.0
 Requires PHP: 7.0
 Tested up to: 7.1.3
-Stable tag: 5.0.2
+Stable tag: 5.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -284,6 +284,12 @@ Explore the plugin instantly using the WordPress Playground:
 
 == Changelog ==
 
+= 5.0.3 =
+* Fix: Fixed an issue with API error messages related to HTTP referrer restrictions.
+* Security: Fixed a security issue related to the `csv_column` parameter for improved Wordfence compatibility.
+* New: Automatically create a default sample map when a new user activates the plugin.
+
+
 = 5.0.2 =
 * New: Store Locator feature added.
 * New: "WP Maps" Gutenberg block. Choose a map from a dropdown, with a live preview in the editor.
@@ -427,6 +433,9 @@ Explore the plugin instantly using the WordPress Playground:
 
 
 == Upgrade Notice ==
+
+= 5.0.3 =
+– Please upgrade to version 5.0.0 or above to get new features and security fixes.
 
 = 5.0.2 =
 – Please upgrade to version 5.0.2 for getting new features.

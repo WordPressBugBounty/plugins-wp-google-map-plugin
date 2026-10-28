@@ -7,7 +7,7 @@
  * Author URI: https://weplugins.com/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Version: 5.0.2
+ * Version: 5.0.3
  * Text Domain: wp-google-map-plugin
  * Domain Path: /lang
 */
@@ -82,7 +82,7 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			add_shortcode( 'put_wpgm', 					  [ $this, 'wpgmp_show_location_in_map'] );
 			
 			// Builder integrations must load on frontend too (block registration, Elementor, Divi).
-			require_once plugin_dir_path( __FILE__ ) . 'wpgmp-builders/loader.php';
+			require_once plugin_dir_path( __FILE__ ) . 'integrations/wpgmp-builders/loader.php';
 			
 			if ( is_admin() ) {
 
@@ -1329,7 +1329,7 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 				}
 			}
 
-			$this->wpgmp_set_extrafields();
+			$this->wpgmp_set_sample_map_data();
 		}
 
 		/**
@@ -1345,55 +1345,46 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			
 		}
 
-		public static function wpgmp_set_extrafields(){
+		public static function wpgmp_set_sample_map_data(){
 
-			$extra_field_val = get_option( 'wpgmp_settings', true );	
+			global $wpdb;
 
-			if(!isset($extra_field_val['wpgmp_extrafield_val'])){
-				$modelFactory = new WPGMP_Model();
-				$location_obj          = $modelFactory->create_object( 'location' );
-				$map_locations = $location_obj->fetch();
-				if( !empty( $map_locations ) ){
-				$extra_field_val['wpgmp_extrafield_val'] = array();
-					foreach($map_locations as $loc_val){
-						if(isset($loc_val->location_extrafields) && !empty($loc_val->location_extrafields)){
-							foreach($loc_val->location_extrafields as $ex_key => $ex_val){
-								if(!isset($extra_field_val['wpgmp_extrafield_val'][$ex_key])){
-									$extra_field_val['wpgmp_extrafield_val'][$ex_key] = array();
-									if(!empty($ex_val)){
-										$extra_val_impolode = array_map('trim',explode(',', $ex_val));
-										$extra_field_val['wpgmp_extrafield_val'][$ex_key] = $extra_val_impolode;
-									}
-								}else{	
-										
-									if(empty($extra_field_val['wpgmp_extrafield_val'][$ex_key])){
-										if(!empty($ex_val)){
-											$extra_val_impolode = array_map('trim',explode(',', $ex_val));
-											$extra_field_val['wpgmp_extrafield_val'][$ex_key] = $extra_val_impolode;
-										}
-									}else{
-										if(!empty($ex_val)){
-											$extra_val_impolode = array_map('trim',explode(',', $ex_val));
-											$temp_store = $extra_field_val['wpgmp_extrafield_val'][$ex_key];
-											foreach($extra_val_impolode as $ev_val){
-												if (!in_array(strtolower($ev_val), array_map('strtolower', $temp_store))) {
-													$extra_field_val['wpgmp_extrafield_val'][$ex_key][] = $ev_val;
-												}
-											}
-										}
-										
-									}
-									
-								}
-							}
+		    // Make sure the database tables already exist.
+		    $location_count = $wpdb->get_var(
+		        'SELECT COUNT(*) FROM ' . TBL_LOCATION
+		    );
 
-						}
-						
-					}
-				}
+		    $map_count = $wpdb->get_var(
+		        'SELECT COUNT(*) FROM ' . TBL_MAP
+		    );
 
-				update_option( 'wpgmp_settings', $extra_field_val );
-			}
+		    if (
+		        $wpdb->last_error ||
+		        (int) $location_count !== 0 ||
+		        (int) $map_count !== 0
+		    ) {
+		        return;
+		    }
+
+		    if ( ! class_exists( 'WPGMP_Model_Tools' ) ) {
+		        return;
+		    }
+
+		    // Prepare the same fields as the backend form.
+		    $nonce = wp_create_nonce( 'wpgmp-nonce' );
+
+		    $_POST['operation'] = 'upload_sampledata';
+		    $_POST['wpgmp_sampledata_consent'] = 'YES';
+		    $_POST['wpgmp_sampledata_submit'] = 'Create Sample Data';
+		    $_POST['_wpnonce'] = $nonce;
+
+		    $_REQUEST['operation'] = 'upload_sampledata';
+		    $_REQUEST['wpgmp_sampledata_consent'] = 'YES';
+		    $_REQUEST['wpgmp_sampledata_submit'] = 'Create Sample Data';
+		    $_REQUEST['_wpnonce'] = $nonce;
+
+		    $model = new WPGMP_Model_Tools();
+		    $model->upload_sampledata();
 
 		}
 
@@ -1415,7 +1406,7 @@ if ( ! class_exists( 'WPGMP_Google_Maps_Lite' ) ) {
 			
 			if ( is_admin() )
 			$this->wpgmp_define( 'WPGMP_SLUG', 'wpgmp_view_overview' );
-			$this->wpgmp_define( 'WPGMP_VERSION', '5.0.2' );
+			$this->wpgmp_define( 'WPGMP_VERSION', '5.0.3' );
 			$this->wpgmp_define( 'WPGMP_FOLDER', basename( dirname( __FILE__ ) ) );
 			$this->wpgmp_define( 'WPGMP_DIR', plugin_dir_path( __FILE__ ) );
 			$this->wpgmp_define( 'WPGMP_ICONS_DIR', WPGMP_DIR . '/assets/images/icons/' );

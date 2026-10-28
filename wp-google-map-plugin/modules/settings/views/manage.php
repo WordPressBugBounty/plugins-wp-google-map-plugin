@@ -679,7 +679,7 @@ $wpgmp_form->add_element(
     array(
         'label'  => esc_html__( 'Execution Delay (ms)', 'wp-google-map-plugin' ),
         'value'  => isset( $wpgmp_settings['wpgmp_set_timeout'] ) ? $wpgmp_settings['wpgmp_set_timeout'] : '100',
-        'before' => '<div class="fc-6"><div class="wpgmp_apitest"></div>',
+        'before' => '<div class="fc-6">',
         'after'  => '</div>',
         'class'  => 'fc-form-control',
         'desc'   => esc_html__( 'Set a delay (0–1000 ms) if the map fails to load immediately.', 'wp-google-map-plugin' ),

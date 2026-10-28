@@ -11284,36 +11284,56 @@ map_loaded() {
 })(jQuery, window, document);
 
 // ====== Google Maps API Error Handler (add at top of maps.js) ======
-// - Runs only for maps that use the Google provider (not Leaflet / OpenStreetMap etc.).
-// - Does nothing inside the Gutenberg / Elementor / Divi live previews
-//   (the preview document sets window.wpgmpBuilderPreview = true before the plugin scripts load).
+// The overlay is shown only when the error comes from WP Maps' own API key.
+// Errors from another plugin's or theme's API key are ignored.
+
+// All Google Maps API script tags on the page (in DOM order)
+function wpgmpGetMapsScripts() {
+  return Array.from(document.scripts).filter(function (s) {
+    return /maps\.(googleapis|google)\.com\/maps\/api\/js/.test(s.src);
+  });
+}
+
+// Google uses only the first Maps script on the page. Check whether it is ours.
+function wpgmpOwnScriptWon() {
+  var scripts = wpgmpGetMapsScripts();
+  return scripts.length > 0 && scripts[0].id === 'wpgmp-google-api-js';
+}
+
+// Common handler: only errors from our own key are passed on
+function wpgmpHandleApiError(message, link) {
+  if (!wpgmpOwnScriptWon()) return;   // error from another API script, ignore
+  showWpgmpApiError(message, link);
+}
 
 window.gm_authFailure = function () {
-  showWpgmpApiError(
+  wpgmpHandleApiError(
     'Google Maps authentication failed. Check your API key, billing status, and domain restrictions.',
     'https://developers.google.com/maps/documentation/javascript/error-messages'
   );
 };
 
 (function () {
-  if (window.wpgmpBuilderPreview) return; // builder preview: don't hook the console at all
+  if (window.wpgmpBuilderPreview) return; // builder preview: don't hook the console
 
-  const patterns = [
+  var patterns = [
     { match: 'NoApiKeys', msg: 'No Google Maps API key has been set. Please add a valid API key in the plugin settings.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#no-api-keys' },
     { match: 'InvalidKeyMapError', msg: 'The Google Maps API key is invalid.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#invalid-key-map-error' },
     { match: 'ApiProjectMapError', msg: 'There is a problem with the Google Maps API configuration. The API key may not have been added, may be invalid, or the Google Cloud project linked to the API key may be deleted, disabled, or misconfigured.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#api-project-map-error' },
     { match: 'BillingNotEnabledMapError', msg: 'Billing is not enabled for this Google Maps API project.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#billing-not-enabled-map-error' },
     { match: 'ApiNotActivatedMapError', msg: 'The Maps JavaScript API is not activated for this project.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#api-not-activated-map-error' },
     { match: 'OverQuotaMapError', msg: 'The Google Maps API quota has been exceeded for this key.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#over-quota-map-error' },
+    { match: 'RefererNotAllowedMapError', msg: 'This website URL is not allowed by the HTTP referrer restrictions of your Google Maps API key. Add this site (for example, http://localhost/* or https://yourdomain.com/*) to the key\'s allowed referrers in Google Cloud Console.', link: 'https://developers.google.com/maps/documentation/javascript/error-messages#referer-not-allowed-map-error' },
   ];
 
   function intercept(level) {
-    const original = console[level];
-    console[level] = function (...args) {
-      const msg = args.join(' ');
-      const hit = patterns.find(p => msg.includes(p.match));
+    var original = console[level];
+    console[level] = function () {
+      var args = Array.prototype.slice.call(arguments);
+      var msg = args.join(' ');
+      var hit = patterns.find(function (p) { return msg.includes(p.match); });
       if (hit) {
-        showWpgmpApiError(hit.msg, hit.link);
+        wpgmpHandleApiError(hit.msg, hit.link);
       }
       original.apply(console, args);
     };
@@ -11325,12 +11345,11 @@ window.gm_authFailure = function () {
 
 // Returns true only when this map element belongs to a Google-provider map.
 function wpgmpIsGoogleMap(mapEl) {
-  const container = mapEl.closest('.wpgmp_map_container');
+  var container = mapEl.closest('.wpgmp_map_container');
   if (container) {
-    const m = container.className.match(/wpgmp-map-provider-([\w-]+)/);
+    var m = container.className.match(/wpgmp-map-provider-([\w-]+)/);
     if (m) return m[1] === 'google';
   }
-  // No provider class found (e.g. the admin preview): fall back to whether Google Maps is loaded.
   return !!(window.google && window.google.maps);
 }
 
@@ -11338,7 +11357,7 @@ function showWpgmpApiError(message, docLink) {
   if (window.wpgmpBuilderPreview) return;                        // not in builder previews
   if (!window.wpgmp_local || !wpgmp_local.is_admin) return;      // admins only
 
-  const mapElements = document.querySelectorAll('.wpgmp_map, #wpgmp_map, #wpgmp_map_preview');
+  var mapElements = document.querySelectorAll('.wpgmp_map, #wpgmp_map, #wpgmp_map_preview');
 
   mapElements.forEach(function (mapEl) {
     if (!wpgmpIsGoogleMap(mapEl)) return;                        // Google provider only
@@ -11346,15 +11365,14 @@ function showWpgmpApiError(message, docLink) {
 
     mapEl.style.position = mapEl.style.position || 'relative';
 
-    const overlay = document.createElement('div');
+    var overlay = document.createElement('div');
     overlay.className = 'wpgmp-error-overlay';
-    overlay.innerHTML = `
-      <div class="wpgmp-error-box">
-        <span class="wpgmp-error-icon">⚠️</span>
-        <p>${message}</p>
-        ${docLink ? `<a href="${docLink}" target="_blank" rel="noopener noreferrer" class="wpgmp-error-link">Learn more</a>` : ''}
-      </div>
-    `;
+    overlay.innerHTML =
+      '<div class="wpgmp-error-box">' +
+        '<span class="wpgmp-error-icon">⚠️</span>' +
+        '<p>' + message + '</p>' +
+        (docLink ? '<a href="' + docLink + '" target="_blank" rel="noopener noreferrer" class="wpgmp-error-link">Learn more</a>' : '') +
+      '</div>';
     mapEl.appendChild(overlay);
   });
 }

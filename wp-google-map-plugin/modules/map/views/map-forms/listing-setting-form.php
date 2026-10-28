@@ -318,7 +318,7 @@ $default_place_holder = '
 </div>
 </div>
 <div class="wpgmp_locations_content">
-{marker_message}
+{marker_image} {marker_message}
 </div>
 <div class="wpgmp_locations_foot"></div>
 </div>';
