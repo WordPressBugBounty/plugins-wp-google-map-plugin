@@ -411,7 +411,6 @@ Enjoy the aroma of freshly roasted beans all day long.';
 				'map_control_layers',
 				'map_styles_settings',
 				'map_street_view_setting',
-				'map_marker_cluster',
 				'map_marker_spidifier_group',
 				'map_overlay_setting',
 				'map_limit_panning_setting',
@@ -421,7 +420,7 @@ Enjoy the aroma of freshly roasted beans all day long.';
 				'map_all_control[listing_openoption]',
 				'wpgmp_search_placeholders_list',
 				'map_all_control[wpgmp_display_print_option]',
-				
+				'map_cluster_setting[location_zoom]',
 			],
 			'leaflet' => [
 				'drawing_tools',
